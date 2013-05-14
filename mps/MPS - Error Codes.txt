@@ -1,0 +1,64 @@
+
+.::  WS AUTHENTICATION  ::.
+
+1-1:   (Debug mode) XML received in the request. 
+
+1-2:   (Debug mode) WSDL generated.
+
+1-10:  (Debug mode) Headers received in the request.
+
+1-200: Error al buscar el ISBN en la tabla books. Se ha validado la existencia de credenciales en la tabla books_credentials, pero no se ha encontrado
+       el libro en la tabla books.
+
+1-201: La función que manipula los manifiestos para poner los href absolutos no ha podido finalizar debido a algún error.
+
+1-202: Error al abrir el archivo. fopen($path); devuelve un error
+
+1-203: Error de función, a finalizado sin ninguna actividad.
+
+1-204: Error al recuperar el path de la actividad. 
+
+1-210: Error al buscar el ISBN en la tabla books. Se ha validado la existencia de credenciales en la tabla books_credentials, pero no se ha encontrado
+       el libro en la tabla books.
+
+1-211: Error al buscar el Unit code en la tabla books_units. 
+
+1-212: La función que manipula los manifiestos para poner los href absolutos no ha podido finalizar debido a algún error.
+
+1-220: Error al buscar el ISBN en la tabla books. Se ha validado la existencia de credenciales en la tabla books_credentials, pero no se ha encontrado
+       el libro en la tabla books.
+
+1-221: Error al buscar el Unit code en la tabla books_units. 
+
+1-222: Error al buscar la activity code en la tabla books_activities.
+
+1-223: La función que manipula los manifiestos para poner los href absolutos no ha podido finalizar debido a algún error.
+
+
+
+.::  WS BOOKSSTRUCTURE  ::.
+
+2-1:   (Debug mode) XML received in the request.
+
+2-2:   (Debug mode) WSDL generated.
+
+2-10:  (Debug mode) Headers received in the request.
+
+2-100: Error al cargar los libros para un centro. El idcentro recibido del web services existe en la tabla center, pero no tiene ninguna entrada
+       en la tabla center_books.
+	   
+2-101: Error al cargar los datos de un libro. El idbook que tiene un centro asignado en la tabla center_books no se ha encontrado en la tabla books.
+
+.::  TRAKING  ::.
+
+3-1:   El web services de seguimiento a respondido con un error.
+
+3-2:   Parámetro token no recibido.
+
+3-3:   LMS sin credencial asignada.
+
+.::  CRON  ::.
+
+4-1:   La función delete_records de la tabla log a devuelto un error.
+
+4-2:   La funciñon delete_records de la tabla sessions a devuelto un error.

@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Llibre contigut remot amb dues activitats</title>
+<meta http-equiv="Content-Type" content="text/html;  charset=utf-8" />
+<!-- Created using eXe: http://exelearning.org -->
+<style type="text/css">
+@import url(base.css);
+@import url(content.css);
+</style>
+<script type="text/javascript" src="common.js"></script>
+</head>
+<body><div id="outer">
+<div id="main">
+<div id="nodeDecoration">
+<p id="nodeTitle">
+Llibre contigut remot amb dues activitats</p></div>
+<div class="FreeTextIdevice" id="id19">
+<div class="iDevice emphasis0">
+<div id="ta19_1" class="block" style="display:block">
+
+<p>
+
+<img src="numeros.gif" align="left" height="112" width="120" /> 
+
+</p>
+
+<p>
+
+&nbsp;
+
+</p>
+
+<div align="left">
+
+<font color="#339966" face="book antiqua,palatino"><u><b><font size="5"><font size="6">Unitat 1: Els nombres</font></font></b></u></font>
+
+</div>
+
+<p align="center">
+
+&nbsp;
+
+</p>
+
+<p align="center">
+
+&nbsp;
+
+</p>
+
+<p align="center">
+
+&nbsp;
+
+</p>
+
+<div align="center">
+
+</div>
+
+<div align="center">
+
+</div>
+
+<div align="center">
+
+<hr size="3" />
+
+</div>
+
+<p>
+
+<font color="#ff9900"><u><b><font size="5"></font></b></u></font>
+
+</p>
+
+</div></div>
+</div>
+<div class="QuizTestIdevice" id="id20">
+<script type="text/javascript">
+<!-- //<![CDATA[
+var numQuestions = 4;
+var rawScore = 0;
+var actualScore = 0;
+var question0;
+var question1;
+var question2;
+var question3;
+var key0 = 0;
+var key1 = 0;
+var key2 = 0;
+var key3 = 0;
+function getAnswer()
+        {
+            doLMSSetValue("cmi.interactions.0.id","key0b20");
+            doLMSSetValue("cmi.interactions.0.type","choice");
+            doLMSSetValue("cmi.interactions.0.correct_responses.0.pattern",
+                          "0");
+            
+            for (var i=0; i < 2; i++)
+            {
+               if (document.getElementById("quizForm20").key0b20[i].checked)
+               {
+                  question0 = document.getElementById("quizForm20").key0b20[i].value;
+                  doLMSSetValue("cmi.interactions.0.student_response",question0);
+                  break;
+               }
+            }
+           
+            doLMSSetValue("cmi.interactions.1.id","key1b20");
+            doLMSSetValue("cmi.interactions.1.type","choice");
+            doLMSSetValue("cmi.interactions.1.correct_responses.0.pattern",
+                          "0");
+            
+            for (var i=0; i < 2; i++)
+            {
+               if (document.getElementById("quizForm20").key1b20[i].checked)
+               {
+                  question1 = document.getElementById("quizForm20").key1b20[i].value;
+                  doLMSSetValue("cmi.interactions.1.student_response",question1);
+                  break;
+               }
+            }
+           
+            doLMSSetValue("cmi.interactions.2.id","key2b20");
+            doLMSSetValue("cmi.interactions.2.type","choice");
+            doLMSSetValue("cmi.interactions.2.correct_responses.0.pattern",
+                          "0");
+            
+            for (var i=0; i < 2; i++)
+            {
+               if (document.getElementById("quizForm20").key2b20[i].checked)
+               {
+                  question2 = document.getElementById("quizForm20").key2b20[i].value;
+                  doLMSSetValue("cmi.interactions.2.student_response",question2);
+                  break;
+               }
+            }
+           
+            doLMSSetValue("cmi.interactions.3.id","key3b20");
+            doLMSSetValue("cmi.interactions.3.type","choice");
+            doLMSSetValue("cmi.interactions.3.correct_responses.0.pattern",
+                          "0");
+            
+            for (var i=0; i < 2; i++)
+            {
+               if (document.getElementById("quizForm20").key3b20[i].checked)
+               {
+                  question3 = document.getElementById("quizForm20").key3b20[i].value;
+                  doLMSSetValue("cmi.interactions.3.student_response",question3);
+                  break;
+               }
+            }
+           }
+        function calcRawScore(){
+
+            if (question0 == key0)
+            {
+               doLMSSetValue("cmi.interactions.0.result","correct");
+               rawScore++;
+            }
+            else
+            {
+               doLMSSetValue("cmi.interactions.0.result","wrong");
+            }
+            if (question1 == key1)
+            {
+               doLMSSetValue("cmi.interactions.1.result","correct");
+               rawScore++;
+            }
+            else
+            {
+               doLMSSetValue("cmi.interactions.1.result","wrong");
+            }
+            if (question2 == key2)
+            {
+               doLMSSetValue("cmi.interactions.2.result","correct");
+               rawScore++;
+            }
+            else
+            {
+               doLMSSetValue("cmi.interactions.2.result","wrong");
+            }
+            if (question3 == key3)
+            {
+               doLMSSetValue("cmi.interactions.3.result","correct");
+               rawScore++;
+            }
+            else
+            {
+               doLMSSetValue("cmi.interactions.3.result","wrong");
+            }
+        }
+        
+        function calcScore2()
+        {
+           computeTime();  // the student has stopped here.
+       
+           document.getElementById("quizForm20").submitB.disabled = true;
+       
+           getAnswer();
+     
+           calcRawScore();
+           
+           actualScore = Math.round(rawScore / numQuestions * 100);
+        alert("Your score is " + actualScore + "%")   
+           
+           doLMSSetValue( "cmi.core.score.raw", actualScore+"" );
+           
+           var mode = doLMSGetValue( "cmi.core.lesson_mode" );
+     
+               if ( mode != "review"  &&  mode != "browse" ){
+                 if ( actualScore < 50 )
+                 {
+                   doLMSSetValue( "cmi.core.lesson_status", "failed" );
+                 }
+                 else 
+                 {
+                   doLMSSetValue( "cmi.core.lesson_status", "passed" );
+                 }
+               
+                 doLMSSetValue( "cmi.core.exit", "" );
+                 } 
+     
+         exitPageStatus = true;
+     
+     
+         doLMSCommit();
+     
+         doLMSFinish();
+          
+        }
+//]]> -->
+</script>
+<form name="quizForm20" id="quizForm20" action="javascript:calcScore2();">
+<div class="iDevice emphasis1">
+<img alt="" class="iDevice_icon" src="icon_question.gif" />
+<span class="iDeviceTitle">Preguntes</span>
+<div class="iDevice_inner">
+<div class="passrate" value="50"></div>
+<div class="question">
+<div id="taquestion0b20" class="block" style="display:block">10 és més gran que 1?
+
+</div><br/>
+<table><tr><td><input type="radio" name="key0b20" value="0" />
+</td><td>
+<div id="taoptionAnswer0q0b20" class="block" style="display:block">Si
+
+</div></td></tr>
+<tr><td><input type="radio" name="key0b20" value="1" />
+</td><td>
+<div id="taoptionAnswer1q0b20" class="block" style="display:block">No
+
+</div></td></tr>
+</table></div>
+<br/><div class="question">
+<div id="taquestion1b20" class="block" style="display:block">10 és més gran que 2?
+
+</div><br/>
+<table><tr><td><input type="radio" name="key1b20" value="0" />
+</td><td>
+<div id="taoptionAnswer0q1b20" class="block" style="display:block">Si
+
+</div></td></tr>
+<tr><td><input type="radio" name="key1b20" value="1" />
+</td><td>
+<div id="taoptionAnswer1q1b20" class="block" style="display:block">No
+
+</div></td></tr>
+</table></div>
+<br/><div class="question">
+<div id="taquestion2b20" class="block" style="display:block">10 és més gran que 3?
+
+</div><br/>
+<table><tr><td><input type="radio" name="key2b20" value="0" />
+</td><td>
+<div id="taoptionAnswer0q2b20" class="block" style="display:block">Si<br />
+
+</div></td></tr>
+<tr><td><input type="radio" name="key2b20" value="1" />
+</td><td>
+<div id="taoptionAnswer1q2b20" class="block" style="display:block">No
+
+</div></td></tr>
+</table></div>
+<br/><div class="question">
+<div id="taquestion3b20" class="block" style="display:block">10 és més gran que 4?
+
+</div><br/>
+<table><tr><td><input type="radio" name="key3b20" value="0" />
+</td><td>
+<div id="taoptionAnswer0q3b20" class="block" style="display:block">Si
+
+</div></td></tr>
+<tr><td><input type="radio" name="key3b20" value="1" />
+</td><td>
+<div id="taoptionAnswer1q3b20" class="block" style="display:block">No
+
+</div></td></tr>
+</table></div>
+<br/><input type="submit" name="submitB" value="Enviar respostes"/>
+</div></div>
+</form>
+</div>
+</div>
+</div>
+</body></html>
