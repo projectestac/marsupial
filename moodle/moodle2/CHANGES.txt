@@ -1,0 +1,9 @@
+Changes in progress
+---------------------------------------------------------------------------------------
+- Added SVG icons for rcontent and rscorm
+
+
+Version 2.0 (2013-04-22)
+---------------------------------------------------------------------------------------
+- First version of the Marsupial module compatible with Moodle 2. It has been tested with Moodle 2.3 and 2.4
+
