@@ -1,6 +1,7 @@
 Changes in progress
 ---------------------------------------------------------------------------------------
 - Added SVG icons for rcontent and rscorm
+- Fixed bug with get_record call parameters in rcontent module
 
 
 Version 2.0 (2013-04-22)
