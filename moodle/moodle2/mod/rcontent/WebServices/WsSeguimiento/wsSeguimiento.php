@@ -1,6 +1,6 @@
 <?php
 
-include("../../../../config.php");  
+include('../../../../config.php');  
 require_once($CFG->dirroot.'/blocks/rcommon/WebServices/lib.php');
 
 //echo $defWSDL;
@@ -752,8 +752,8 @@ function valid_unit($ResultExt, $book, $rcontent, &$unidad)
     
     try
     {   
-        //busco la unidad por unitid del rcontent
-        if ($rcontent->unitid != 0)
+        //busco la unidad por unitid del rcontent, excepto cuando está presente el parámetro ForzarGuardar y es 1
+        if ($rcontent->unitid != 0 && (!property_exists($ResultExt, 'ForzarGuardar') || $ResultExt->ForzarGuardar!=1) )
         {
             $unidad = $DB->get_record_sql("SELECT * FROM {$CFG->prefix}rcommon_books_units where id = {$rcontent->unitid}", array(), IGNORE_MULTIPLE);
 
@@ -893,8 +893,8 @@ function valid_activity($ResultExt, $book, $rcontent, $unidad, &$actividad)
     
     try
     {   
-        //busco la actividad por actividadid del rcontent
-        if ($rcontent->activityid != 0)
+        //busco la actividad por actividadid del rcontent, excepto cuando está presente el parámetro ForzarGuardar y es igual a 1
+        if ($rcontent->activityid != 0 && (!property_exists($ResultExt, 'ForzarGuardar') || $ResultExt->ForzarGuardar!=1) )
         {
             $actividad = $DB->get_record_sql("SELECT * FROM {$CFG->prefix}rcommon_books_activities WHERE id = ".$rcontent->activityid, array(), IGNORE_MULTIPLE);
             
