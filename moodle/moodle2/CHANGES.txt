@@ -1,7 +1,11 @@
 Changes in progress
 ---------------------------------------------------------------------------------------
+
+Version 2.0.1 (2013-09-10)
+---------------------------------------------------------------------------------------
 - Added SVG icons for rcontent and rscorm
 - Fixed bug with get_record call parameters in rcontent module
+- Added ForzarGuardar parameter to rcontent module
 
 
 Version 2.0 (2013-04-22)
