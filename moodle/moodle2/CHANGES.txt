@@ -1,6 +1,11 @@
 Changes in progress
 ---------------------------------------------------------------------------------------
 
+Version 2.0.2 (2013-09-19)
+---------------------------------------------------------------------------------------
+- Fixed bug with rscorm to let update the launch value when it has been changed (patch reported by Santillana)
+
+
 Version 2.0.1 (2013-09-10)
 ---------------------------------------------------------------------------------------
 - Added SVG icons for rcontent and rscorm
