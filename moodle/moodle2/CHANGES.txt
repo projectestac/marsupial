@@ -4,6 +4,7 @@ Changes in progress
 Version 2.0.2 (2013-09-19)
 ---------------------------------------------------------------------------------------
 - Fixed bug with rscorm to let update the launch value when it has been changed (patch reported by Santillana)
+- Added check to update WSDL file with the new ForzarGuardar parameter
 
 
 Version 2.0.1 (2013-09-10)
