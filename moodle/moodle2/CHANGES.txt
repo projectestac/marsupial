@@ -1,6 +1,11 @@
 Changes in progress
 ---------------------------------------------------------------------------------------
 
+Version 2.0.3 (2013-10-09)
+---------------------------------------------------------------------------------------
+- Reviewed SQL query to avoid problems with case-sensitive databases (patch reported by Educamos)
+
+
 Version 2.0.2 (2013-09-19)
 ---------------------------------------------------------------------------------------
 - Fixed bug with rscorm to let update the launch value when it has been changed (patch reported by Santillana)
