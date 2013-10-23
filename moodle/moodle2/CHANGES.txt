@@ -1,5 +1,7 @@
 Changes in progress
 ---------------------------------------------------------------------------------------
+- Reviewed code to avoid some problems with PostgreSQL (patch reported by UPCnet)
+
 
 Version 2.0.3 (2013-10-09)
 ---------------------------------------------------------------------------------------
