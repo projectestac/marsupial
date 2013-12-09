@@ -1,6 +1,14 @@
 Changes in progress
 ---------------------------------------------------------------------------------------
+
+
+Version 2.0.4 (2013-12-09)
+---------------------------------------------------------------------------------------
 - Reviewed code to avoid some problems with PostgreSQL (patch reported by UPCnet)
+- Changed some string functions from unibyte to multibyte
+- Cleaned some code and comments 
+- Migrated some SQL functions to Moodle's API best choices
+- Changed some deprecated methods (context)
 
 
 Version 2.0.3 (2013-10-09)
