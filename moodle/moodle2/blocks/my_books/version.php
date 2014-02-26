@@ -25,6 +25,12 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+if (empty($plugin))
+        $plugin = new stdClass;
+if (empty($module))
+        $module = new stdClass;
+
+
 $plugin->version   = 2013042200;        // The current plugin version (Date: YYYYMMDDXX)
 $plugin->requires  = 2011033009;        // Requires this Moodle version
 $plugin->component = 'block_my_books';  // Full name of the plugin (used for diagnostics)
