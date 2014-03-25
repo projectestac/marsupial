@@ -142,7 +142,7 @@ switch ($action){
 	break;
 	default:
 		echo '				<p>'.get_string('keyslookupusertext','block_rcommon').'<br/>
-							<form actio	n="keyManager.php?action=manage" method="GET">
+							<form action="keyManager.php?action=manage" method="GET">
 								<select name="username">
 								';
                                                                 // MARSUPIAL ********** MODIFICAT -> To avoid deleted or not confirmed users
