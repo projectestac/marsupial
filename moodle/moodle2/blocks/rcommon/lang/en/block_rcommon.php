@@ -67,7 +67,7 @@ $string['nocredentials'] = 'Credentials not found.';
 $string['nopublisher'] = 'Publisher not found.';
 // MARSUPIAL *********** AFEGIT -> Insert form key
 // 2011.10.24 @mmartinez
-$string['nokeybtn'] = 'It have no key';
+$string['nokeybtn'] = 'It has no key';
 // *********** FI
 $string['nounit'] = 'Unit not found.';
 // MARSUPIAL *********** AFEGIT -> Publishers manager
@@ -135,7 +135,7 @@ $string['no_publishers'] 		= 'There isn\'t any publisher';
 $string['without_credentials'] 		= 'Users without credentials';
 $string['with_credentials'] 		= 'Users with credentials';
 $string['back_to_stats'] 		= 'Go back';
-$string['good_connection'] 		= 'Connection succed';
+$string['good_connection'] 		= 'Connection succeeded';
 $string['bad_connection'] 		= 'Connection fail';
 $string['books'] 			= 'books';
 $string['atria_error_information'] 	= 'Maybe the connection error is caused because no user has been synchronized yet';
