@@ -23,7 +23,7 @@ require_once($CFG->dirroot.'/mod/rscorm/locallib.php');
 //MARSUPIAL ********** AFEGIT - load instance when update
 if ($CFG->branch < 24) {
     $PAGE->requires->yui2_lib(array('json','connection', 'dom', 'event', 'yahoo'));
-}
+} 
 $PAGE->requires->js('/mod/rscorm/loadselects_ajax.js', true);
 //********** FI
 class mod_rscorm_mod_form extends moodleform_mod {
@@ -105,6 +105,7 @@ class mod_rscorm_mod_form extends moodleform_mod {
         }else{
         	$isbn_list_array=array('- '.get_string('isbn','rscorm').' -');
         }
+        //echo var_dump($isbn_list_array);
         if (ajaxenabled()){
         	$attrs = array('onchange' => 'javascript:rscorm_load_unit_list(this.value);');
         } else{
@@ -385,7 +386,13 @@ class mod_rscorm_mod_form extends moodleform_mod {
         $mform->setType('redirect', PARAM_RAW);
         $mform->addElement('hidden', 'redirecturl', null);
         $mform->setType('redirecturl', PARAM_RAW);
-
+//XTEC ********** AFEGIT -> Added grading option in the rcontent creation form.
+//18/02/2014 . @naseq        
+        $this->standard_grading_coursemodule_elements();
+        $mform->removeElement('grade');
+        $mform->addElement('hidden', 'grade', $quizconfig->maximumgrade);
+        $mform->setType('grade', PARAM_FLOAT);
+//*********** FI
         //-------------------------------------------------------------------------------
         $this->standard_coursemodule_elements();
         //-------------------------------------------------------------------------------

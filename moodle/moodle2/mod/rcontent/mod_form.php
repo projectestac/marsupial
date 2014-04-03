@@ -225,7 +225,14 @@ function definition() {
             }
             $mform->setAdvanced($option);
         }
-         
+//XTEC ********** AFEGIT -> Added grading option in the rcontent creation form.
+//18/02/2014 . @naseq        
+        $this->standard_grading_coursemodule_elements();
+        $mform->removeElement('grade');
+        $mform->addElement('hidden', 'grade', $quizconfig->maximumgrade);
+        $mform->setType('grade', PARAM_FLOAT);
+//*********** FI
+
 //-------------------------------------------------------------------------------
 // add standard elements, common to all modules
         $features = new stdClass;
