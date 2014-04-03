@@ -46,8 +46,8 @@ class ErroresSeguimiento {
 //09/01/2014 . @naseq
         "InvalidIdContenidoLMS" => array("Error" => "1016", "Descripcion" => ""));
 
-//*********** FI       
-//fill descriptions errors                    
+//*********** FI
+//fill descriptions errors
     public function __construct() {
         $this->errores["UsrNoExisteEnCurso"]["Descripcion"] = get_string('usrnotexists', 'rcontent');
         $this->errores["ValoresObligatorios"]["Descripcion"] = get_string('mandatoryvalues', 'rcontent');
@@ -261,9 +261,9 @@ function ResultadoDetalleExtendido($Resultado) {
 //*********** FI
             if (UserAuthentication($HTTP_RAW_POST_DATA, $Resultado->ResultadoExtendido)) {
 //MARSUPIAL ********** AFEGIT -> Validating activity, unit and content in case of forzarGuardar = 1
-//06/02/2014 . @naseq   
+//06/02/2014 . @naseq
 //query1 = to compare idContenidoLMS, idActividad, idUnidad
-                $query1 = "select * from {$CFG->prefix}rcontent rc, {$CFG->prefix}rcommon_books_activities rba , {$CFG->prefix}rcommon_books_units rbu"
+                $query1 = "select * from {rcontent} rc, {rcommon_books_activities} rba , {rcommon_books_units} rbu"
                         . " where rc.id = " . $Resultado->ResultadoExtendido->idContenidoLMS
                         . " and rbu.id = rba.unitid and rc.activityid = rba.id and rc.unitid = rbu.id "
                         . " and rba.code like '%" . $Resultado->ResultadoExtendido->idActividad . "%'"
@@ -273,8 +273,8 @@ function ResultadoDetalleExtendido($Resultado) {
                     if ((property_exists($Resultado->ResultadoExtendido, 'ForzarGuardar') || $Resultado->ResultadoExtendido->ForzarGuardar == 1)) {
 
 //******** query2 = get data if idContendiaLMS and (idAcitividad or idUnidad) found on the rcontent table
-//06/02/2014 . @naseq 
-                        $query2 = "select rc.id, rc.activityid, rc.unitid, rc.course, rc.bookid from {$CFG->prefix}rcontent rc, {$CFG->prefix}rcommon_books_activities rba , {$CFG->prefix}rcommon_books_units rbu "
+//06/02/2014 . @naseq
+                        $query2 = "select rc.id, rc.activityid, rc.unitid, rc.course, rc.bookid from {rcontent} rc, {rcommon_books_activities} rba , {rcommon_books_units} rbu "
                                 . " where rc.id = " . $Resultado->ResultadoExtendido->idContenidoLMS
                                 . " and rbu.id = rba.unitid and rc.activityid = rba.id and rc.unitid = rbu.id "
                                 . " and (rba.code like '%" . $Resultado->ResultadoExtendido->idActividad . "%' "
@@ -284,8 +284,8 @@ function ResultadoDetalleExtendido($Resultado) {
                             if (valid_unit_activity($Resultado->ResultadoExtendido, $unidadid, $actividadid, $ret2)) {
 //query3 = When idActivity and idUnidad is valid but not coresponding with the idContentLMS check if this idActivity and idUnidad has any other content assign.
 //if assigned to any idContent other than the idContenidoLMS then change the idContenidoLMS to the new one.
-//06/02/2014 . @naseq 
-                                $query3 = "select * from {$CFG->prefix}rcontent where course = " . $rcontent->course . " and activityid = ".$actividadid." and unitid = ".$unidadid ;
+//06/02/2014 . @naseq
+                                $query3 = "select * from {rcontent} where course = " . $rcontent->course . " and activityid = ".$actividadid." and unitid = ".$unidadid ;
                                 $rcontent3 = $DB->get_record_sql($query3, array(), IGNORE_MULTIPLE);
                                 if($rcontent3){
                                     $Resultado->ResultadoExtendido->idContenidoLMS = $rcontent3->id;
@@ -294,11 +294,11 @@ function ResultadoDetalleExtendido($Resultado) {
                         }
                     }
                 }
-//*********** FI                
+//*********** FI
                 if ($CFG->center == $Resultado->ResultadoExtendido->idCentro) {
                     $val = $Resultado->ResultadoExtendido;
 
-                    //Valid mandatory        
+                    //Valid mandatory
                     if (!isset($val->idUsuario) || !isset($val->idContenidoLMS) || !valid_result_details($val)) {
                         $ret2 = generate_error($errSeg->errores["ValoresObligatorios"]["Error"], $errSeg->errores["ValoresObligatorios"]["Descripcion"], "ResultadoDetalleExtendido");
 
@@ -313,14 +313,14 @@ function ResultadoDetalleExtendido($Resultado) {
                          */
                     }
 //MARSUPIAL ************* AFEGIT -> Call to the new function for control status
-//2011.05.18 @mmartinez 
+//2011.05.18 @mmartinez
                     else if (!valid_status_result($val)) {
                         $ret2 = generate_error($errSeg->errores["EstadoInvalido"]["Error"], $errSeg->errores["EstadoInvalido"]["Descripcion"], "ResultadoDetalleExtendido");
                     }
 //*********** FI
                     else {
                         //seek rcontent data
-//MARSUPIAL ********** ELIMINAT -> This two lines has been eliminated because they are added before userAuthentication. 
+//MARSUPIAL ********** ELIMINAT -> This two lines has been eliminated because they are added before userAuthentication.
 //This changes has been made to add error code 1016(Invalid IdContenidoLMS).
 //09/01/2014 . @naseq
                         /* $query = "SELECT * FROM {rcontent} where id = " . $Resultado->ResultadoExtendido->idContenidoLMS;
@@ -434,14 +434,14 @@ function ResultadoDetalleExtendido($Resultado) {
                                         $select .= ' AND activityid=' . $actividadid;
                                         $select .= (isset($dat_result->Intentos)) ? ' AND attempt=' . $dat_result->Intentos : ' AND attempt=1';
 
-//MARSUPIAL *********** ELIMINAT -> Not check the FechaHoraInicio field 
+//MARSUPIAL *********** ELIMINAT -> Not check the FechaHoraInicio field
 //2011.12.19 @abertranb
 //	                                if (isset($dat_result->FechaHoraInicio))
 //	                                    $select = $select. ' AND starttime='. $dat_result->FechaHoraInicio;
 // ********** FI
 
                                         $resultid = 0;
-                                        if (!$rcont_gradeid = $DB->get_record_sql("SELECT DISTINCT id FROM {$CFG->prefix}rcontent_grades" . ' ' . $select, array(), IGNORE_MULTIPLE)) {
+                                        if (!$rcont_gradeid = $DB->get_record_sql("SELECT DISTINCT id FROM {rcontent_grades}" . ' ' . $select, array(), IGNORE_MULTIPLE)) {
                                             $instance->timecreated = time();
                                             $resultid = $DB->insert_record('rcontent_grades', $instance);
                                             if ($resultid !== false) {
@@ -604,7 +604,7 @@ function ResultadoDetalleExtendido($Resultado) {
 
                                             $resultid = 0;
 
-                                            if (!$rcont_gradeid = $DB->get_record_sql("SELECT id FROM {$CFG->prefix}rcontent_grades_details" . ' ' . $select, array(), IGNORE_MULTIPLE)) {
+                                            if (!$rcont_gradeid = $DB->get_record_sql("SELECT id FROM {rcontent_grades_details}" . ' ' . $select, array(), IGNORE_MULTIPLE)) {
                                                 $instance->timecreated = time();
                                                 $resultid = $DB->insert_record('rcontent_grades_details', $instance);
                                             } else {
@@ -686,13 +686,13 @@ function ResultadoDetalleExtendido($Resultado) {
                   $DB->insert_record("rcommon_errors_log", $tmp);
                  */
             }
-//*********** FI 
+//*********** FI
 //MARSUPIAL ********** AFEGIT -> Added new condition to check IdContenidoLMS
 //09/01/2014 . @naseq
         } else {
             $ret2 = generate_error($errSeg->errores["InvalidIdContenidoLMS"]["Error"], $errSeg->errores["InvalidIdContenidoLMS"]["Descripcion"], "ResultadoDetalleExtendido");
         }
-//*********** FI   
+//*********** FI
     } catch (Exception $e) {
         $ret2 = generate_error($e->getCode(), $e->getMessage(), "ResultadoDetalleExtendido");
 
@@ -751,7 +751,7 @@ function valid_unit($ResultExt, $book, $rcontent, &$unidad) {
     try {
         //busco la unidad por unitid del rcontent, excepto cuando está presente el parámetro ForzarGuardar y es 1
         if ($rcontent->unitid != 0 && (!property_exists($ResultExt, 'ForzarGuardar') || $ResultExt->ForzarGuardar != 1)) {
-            $unidad = $DB->get_record_sql("SELECT * FROM {$CFG->prefix}rcommon_books_units where id = {$rcontent->unitid}", array(), IGNORE_MULTIPLE);
+            $unidad = $DB->get_record_sql("SELECT * FROM {rcommon_books_units} where id = {$rcontent->unitid}", array(), IGNORE_MULTIPLE);
 
             //si rcontent tiene una unidad especifica
             //error si ha llegado desde ws o no son iguales
@@ -762,11 +762,11 @@ function valid_unit($ResultExt, $book, $rcontent, &$unidad) {
         if (isset($ResultExt->idUnidad)) {
             //buscamos la unidad por codigo
             if ($unidad == false)
-                $unidad = $DB->get_record_sql("SELECT * FROM {$CFG->prefix}rcommon_books_units where bookid = {$book->id} AND code = '{$ResultExt->idUnidad}'", array(), IGNORE_MULTIPLE);
+                $unidad = $DB->get_record_sql("SELECT * FROM {rcommon_books_units} where bookid = {$book->id} AND code = '{$ResultExt->idUnidad}'", array(), IGNORE_MULTIPLE);
 
             //si existe la unidad pero cambia el orden o el titulo
 // MARSUPIAL ************ MODIFICAT -> Just update if no isset unit/actividad title or no isset unit/activity order
-// 2012.03.12 @sarjona                
+// 2012.03.12 @sarjona
             $actualizar_unidad = $unidad && ((empty($unidad->name) && !empty($ResultExt->UnidadTitulo)) || (empty($unidad->sortorder) && !empty($ResultExt->UnidadOrden)));
 // *********** ORIGINAL
             //$actualizar_unidad = $unidad && ((isset($ResultExt->UnidadTitulo) && $unidad->name != $ResultExt->UnidadTitulo)
@@ -778,31 +778,31 @@ function valid_unit($ResultExt, $book, $rcontent, &$unidad) {
                 //se ha encontrado pero cambia el nombre o orden llamamos al ws
                 if ($unidad == false || $actualizar_unidad) {
 // XTEC ************ MODIFICAT -> When recive a non stored unit/activity and call to the book structure ws just get the structure of the selected book, not all the catalog for this publisher
-// 2012.03.01 @mmartinez 
+// 2012.03.01 @mmartinez
                     $publisher = $DB->get_record('rcommon_publisher', array('id' => $book->publisherid));
                     get_book_structure($publisher->urlwsbookstructure, $publisher->username, $publisher->password, $book->isbn);
-// ************ ORIGINAL                	
+// ************ ORIGINAL
                     //get_all_books_structure($book->publisherid, $book->isbn);
 // ************ FI
 // XTEC ************ MODIFICAT -> Fixed bug in the processing of received unit/activity title when it's diferent from the stored one
 // 2012.03.01 @mmartinez
                     // si aun no tenemos la info de la unidad la buscamos
                     if ($unidad == false) {
-                        $unidad = $DB->get_record_sql("SELECT * FROM {$CFG->prefix}rcommon_books_units where bookid = {$rcontent->bookid} AND code = '{$ResultExt->idUnidad}'", array(), IGNORE_MULTIPLE);
+                        $unidad = $DB->get_record_sql("SELECT * FROM {rcommon_books_units} where bookid = {$rcontent->bookid} AND code = '{$ResultExt->idUnidad}'", array(), IGNORE_MULTIPLE);
                     }
 
                     //volvemos a comprobar si coincide el t�tulo o no
 // MARSUPIAL ************ MODIFICAT -> Just update if no isset unit/actividad title or no isset unit/activity order
-// 2012.03.12 @sarjona                
+// 2012.03.12 @sarjona
                     $actualizar_unidad = $unidad && ((empty($unidad->name) && !empty($ResultExt->UnidadTitulo)) || (empty($unidad->sortorder) && !empty($ResultExt->UnidadOrden)));
 // *********** ORIGINAL
                     //$actualizar_unidad = $unidad && ((isset($ResultExt->UnidadTitulo) && $unidad->name != $ResultExt->UnidadTitulo)
                     //|| (isset($ResultExt->UnidadOrden) && $unidad->sortorder != $ResultExt->UnidadOrden));
 // *********** FI
-// ************ ORIGINAL                	
+// ************ ORIGINAL
                     //get_all_books_structure($book->publisherid, $book->isbn);
                     //obtengo los nuevos datos de la unidad
-                    //$unidad = $DB->get_record_sql("SELECT * FROM {$CFG->prefix}rcommon_books_units where bookid = {$rcontent->bookid} AND code = '{$ResultExt->idUnidad}'");
+                    //$unidad = $DB->get_record_sql("SELECT * FROM {rcommon_books_units} where bookid = {$rcontent->bookid} AND code = '{$ResultExt->idUnidad}'");
                     //desactivo para que no actualice
                     //$actualizar_unidad = false;
 // ************ FI
@@ -815,19 +815,19 @@ function valid_unit($ResultExt, $book, $rcontent, &$unidad) {
                 $instance->code = $ResultExt->idUnidad;
 
 // MARSUPIAL ************ MODIFICAT -> Just update if no isset unit/actividad title or no isset unit/activity order
-// 2012.03.12 @sarjona                
+// 2012.03.12 @sarjona
                 $instance->name = isset($unidad) && !empty($unidad->name) ? $unidad->name : (!empty($ResultExt->UnidadTitulo) ? $ResultExt->UnidadTitulo : $ResultExt->idUnidad);
 // *********** ORIGINAL
                 //$instance->name = isset($ResultExt->UnidadTitulo)? $ResultExt->UnidadTitulo : $ResultExt->idUnidad;
 // *********** FI
 // MARSUPIAL ************ MODIFICAT -> Just update if no empty unit/actividad summary
-// 2012.03.12 @sarjona                
+// 2012.03.12 @sarjona
                 $instance->summary = isset($unidad) && !empty($unidad->summary) ? $unidad->summary : $instance->name;
 // *********** ORIGINAL
 //                $instance->summary = $instance->name;
 // *********** FI
 // MARSUPIAL ************ MODIFICAT -> Just update if no isset unit/actividad title or no isset unit/activity order
-// 2012.03.12 @sarjona                
+// 2012.03.12 @sarjona
                 $instance->sortorder = isset($unidad) && !empty($unidad->sortorder) ? $unidad->sortorder : (!empty($ResultExt->UnidadOrden) ? $ResultExt->UnidadOrden : 0);
 // ************ ORIGINAL
                 //$instance->sortorder = isset($ResultExt->UnidadOrden)? $ResultExt->UnidadOrden : 0;
@@ -841,7 +841,7 @@ function valid_unit($ResultExt, $book, $rcontent, &$unidad) {
                     $unid = $DB->insert_record('rcommon_books_units', $instance);
                     log_to_file("wsSeguimiento: function valid_activity - Add new unit " . (($unid) ? 'OK' : 'KO (instance:' . serialize($instance) . ')'));
 
-                    //obtiene el registro            
+                    //obtiene el registro
                     $unidad = $DB->get_record_sql("SELECT * FROM {rcommon_books_units} where id = " . $unid, array(), IGNORE_MULTIPLE);
                 }
                 // si el titulo o el orden a cambiado actualizamod el registro
@@ -891,7 +891,7 @@ function valid_activity($ResultExt, $book, $rcontent, $unidad, &$actividad) {
 
             //si existe la unidad pero cambia el orden o el titulo
 // MARSUPIAL ************ MODIFICAT -> Just update if no isset unit/actividad title or no isset unit/activity order
-// 2012.03.12 @sarjona                
+// 2012.03.12 @sarjona
             $actualizar_actividad = $actividad && ((empty($activitat->name) && !empty($ResultExt->ActividadTitulo)) || (empty($activitat->sortorder) && !empty($ResultExt->ActividadOrden)));
 // *********** ORIGINAL
             //$actualizar_actividad = $actividad && ((isset($ResultExt->ActividadTitulo) && $actividad->name != $ResultExt->ActividadTitulo)
@@ -902,21 +902,21 @@ function valid_activity($ResultExt, $book, $rcontent, $unidad, &$actividad) {
                 //se ha encontrado pero cambia el nombre o orden llamamos al ws
                 if ($actividad == false || $actualizar_actividad) {
 // XTEC ************ MODIFICAT -> When recive a non stored unit/activity and call to the book structure ws just get the structure of the selected book, not all the catalog for this publisher
-// 2012.03.01 @mmartinez 
+// 2012.03.01 @mmartinez
                     $publisher = $DB->get_record('rcommon_publisher', array('id' => $book->publisherid));
                     get_book_structure($publisher->urlwsbookstructure, $publisher->username, $publisher->password, $book->isbn);
 // ************ ORIGINAL
                     //get_all_books_structure($book->publisherid, $book->isbn);
 // ************ FI
 // XTEC ************ MODIFICAT -> Fixed bug in the processing of received unit/activity title when it's diferent from the stored one
-// 2012.03.01 @mmartinez 
+// 2012.03.01 @mmartinez
                     //obtengo los nuevos datos de la actividad
                     if ($actividad == false) {
                         $actividad = $DB->get_record_sql("SELECT id FROM {rcommon_books_activities} WHERE unitid = " . $unidad->id . " AND code = '" . $ResultExt->idActividad . "'", array(), IGNORE_MULTIPLE);
                     }
                     //y vuelvo a comprobar si coincide el t�tulo o no
 // MARSUPIAL ************ MODIFICAT -> Just update if no isset unit/actividad title or no isset unit/activity order
-// 2012.03.12 @sarjona                
+// 2012.03.12 @sarjona
                     $actualizar_actividad = $actividad && ((empty($activitat->name) && !empty($ResultExt->ActividadTitulo)) || (empty($activitat->sortorder) && !empty($ResultExt->ActividadOrden)));
 // *********** ORIGINAL
                     //$actualizar_actividad = $actividad && ((isset($ResultExt->ActividadTitulo) && $actividad->name != $ResultExt->ActividadTitulo)
@@ -927,7 +927,7 @@ function valid_activity($ResultExt, $book, $rcontent, $unidad, &$actividad) {
                     //$actividad = $DB->get_record_sql($select, array(), IGNORE_MULTIPLE);
                     //desactivo para que no actualice
                     //$actualizar_actividad = false;
-// ************ FI                    
+// ************ FI
                 }
             }
 
@@ -938,19 +938,19 @@ function valid_activity($ResultExt, $book, $rcontent, $unidad, &$actividad) {
                 $instance->unitid = $unidad->id;
                 $instance->code = $ResultExt->idActividad;
 // MARSUPIAL ************ MODIFICAT -> Just update if no isset unit/actividad title or no isset unit/activity order
-// 2012.03.12 @sarjona                
+// 2012.03.12 @sarjona
                 $instance->name = isset($actividad) && !empty($actividad->name) ? $actividad->name : (!empty($ResultExt->ActividadTitulo) ? $ResultExt->ActividadTitulo : $ResultExt->idActividad);
 // *********** ORIGINAL
                 //$instance->name= isset($ResultExt->ActividadTitulo)? $ResultExt->ActividadTitulo : $ResultExt->idActividad;
 // *********** FI
 // MARSUPIAL ************ MODIFICAT -> Just update if no empty unit/actividad summary
-// 2012.03.12 @sarjona                
+// 2012.03.12 @sarjona
                 $instance->summary = isset($actividad) && !empty($actividad->summary) ? $actividad->summary : $instance->name;
 // *********** ORIGINAL
 //                $instance->summary = $instance->name;
 // *********** FI
 // MARSUPIAL ************ MODIFICAT -> Just update if no isset unit/actividad title or no isset unit/activity order
-// 2012.03.12 @sarjona                
+// 2012.03.12 @sarjona
                 $instance->sortorder = isset($actividad) && !empty($actividad->sortorder) ? $actividad->sortorder : (!empty($ResultExt->ActividadOrden) ? $ResultExt->ActividadOrden : 0);
 // ************ ORIGINAL
                 //$instance->sortorder = isset($ResultExt->ActividadOrden )? $ResultExt->ActividadOrden : 0;
@@ -1105,7 +1105,7 @@ function generate_error($codError, $descError, $functionError) {
 
         log_to_file("wsSeguimiento failed: " . $descError);
     } catch (Exception $f) {
-        
+
     }
 
     return $ret_error;
@@ -1336,9 +1336,9 @@ ini_set("soap.wsdl_cache_enabled", "0"); // disabling WSDL cache
 
 $classmap = array('SeguimientoExtendido' => "SeguimientoExtendido", 'Resultado' => "Resultado",
 'DetalleResultado' => "DetalleResultado", 'RespuestaResultadoExtendido' => "RespuestaResultadoExtendido",
-"ResultadoDetalleExtendidoResponse" => "ResultadoDetalleExtendidoResponse");   
+"ResultadoDetalleExtendidoResponse" => "ResultadoDetalleExtendidoResponse");
 
-$server = new SoapServer("$CFG->dataroot/1/WebServices/WsSeguimiento/wsSeguimiento.wsdl");       
+$server = new SoapServer("$CFG->dataroot/1/WebServices/WsSeguimiento/wsSeguimiento.wsdl");
 
 $server->addFunction("ResultadoDetalleExtendido");
 
