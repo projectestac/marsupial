@@ -44,7 +44,7 @@ class ErroresSeguimiento {
         "EstadoInvalido" => array("Error" => "1015", "Descripcion" => "Estat incorrecte. El valor de l'estat &eacute;s incorrecte"),
 //MARSUPIAL ********** AFEGIT -> Add new text string for invalid idContenidoLMS
 //09/01/2014 . @naseq
-        "InvalidIdContenidoLMS" => array("Error" => "1016", "Descripcion" => ""));
+        "InvalidIdContenidoLMS" => array("Error" => "1016", "Descripcion" => "S'ha rebut un idContenidoLMS no v&agrave;lid"));
 
 //*********** FI
 //fill descriptions errors
