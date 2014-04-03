@@ -1,5 +1,5 @@
 <?php
-// This file is part of Marsupial 
+// This file is part of Marsupial
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -25,14 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-if (empty($plugin))
-        $plugin = new stdClass;
-if (empty($module))
-        $module = new stdClass;
-
-
 $plugin->version   = 2013042200;        // The current plugin version (Date: YYYYMMDDXX)
 $plugin->requires  = 2011033009;        // Requires this Moodle version
 $plugin->component = 'block_my_books';  // Full name of the plugin (used for diagnostics)
-$module->release   = 'v2.0.1';          // Human-readable version name
-$module->maturity  = MATURITY_STABLE;   // How stable the plugin is
+$plugin->release   = 'v2.0.1';          // Human-readable version name
+$plugin->maturity  = MATURITY_STABLE;   // How stable the plugin is
