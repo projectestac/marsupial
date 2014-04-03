@@ -248,4 +248,8 @@ $string['invalidunit']='S\'ha rebut un codi d\'unitat no vàlid. - Error unitat:
 $string['invalidactivity']='S\'ha rebut un codi d\'activitat no vàlida. - Error activitat: ';
 $string['invalidcenter']='El codi del centre no és vàlid.';
 $string['permitskeeptrack']='L\'usuari/ària no té permís per a desar seguiments.';
-?>
+//MARSUPIAL ********** AFEGIT -> Add new text string for invalid idContenidoLMS
+//09/01/2014 . @naseq
+$string['invalididcontenidolms']='S\'ha rebut un idContenidoLMS no v&agrave;lid.';
+//*********** FI
+

@@ -251,4 +251,8 @@ $string['invalidunit']='Received an invalid unit code. - Unit error: ';
 $string['invalidactivity']='Received an invalid code activity. - Activity error: ';
 $string['invalidcenter']='The center code is not valid.';
 $string['permitskeeptrack']='The user has no permissions to save follow.'; 
-?>
+//MARSUPIAL ********** AFEGIT -> Add new text string for invalid idContenidoLMS
+//09/01/2014 . @naseq
+$string['invalididcontenidolms']='Received invalid idContenidoLMS.';
+//*********** FI
+

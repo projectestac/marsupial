@@ -137,6 +137,11 @@ $string['with_credentials'] 		= 'Users with credentials';
 $string['back_to_stats'] 		= 'Go back';
 $string['good_connection'] 		= 'Connection succeeded';
 $string['bad_connection'] 		= 'Connection fail';
+// MARSUPIAL ************ AFEGIT -> New string for bad wsdl connection.
+// 2014.01.13 @naseq
+$string['bad_wsdl_connection']          = 'Check authentication web services address.';
+$string['bad_wsdl_connection_alert']    = 'Check authentication web services address.';
+//************ FI
 $string['books'] 			= 'books';
 $string['atria_error_information'] 	= 'Maybe the connection error is caused because no user has been synchronized yet';
 $string['check_publishers'] 		= 'Check the connection';
@@ -239,4 +244,3 @@ $string['keymanager_assing_nouser'] = 'No user was selected';
 $string['checkcredentialko_messageempty'] = 'Credential can\'t be empty';
 $string['rcommon_data_store_log'] = 'Folder to save traces';
 $string['rcommon_data_store_log_desc'] = 'Indicate the folder to save traces';
-?>

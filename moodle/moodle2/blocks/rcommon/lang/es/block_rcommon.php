@@ -136,6 +136,11 @@ $string['with_credentials'] 		= 'Usuarios con credenciales';
 $string['back_to_stats'] 		= 'Vuelve a la portada';
 $string['good_connection'] 		= 'Conexión correcta';
 $string['bad_connection'] 		= 'Se ha producido un problema con la conexión';
+// MARSUPIAL ************ AFEGIT -> New string for bad wsdl connection.
+// 2014.01.13 @naseq
+$string['bad_wsdl_connection']          = 'Comprueba dirección del servicio web de autenticación.';
+$string['bad_wsdl_connection_alert']    = 'Comprueba direcci\u00f3n del servicio web de autenticaci\u00f3n.';
+//************ FI
 $string['books'] 			= 'libros';
 $string['atria_error_information'] 	= 'Posiblemente el error de conexión con Atria sea causado porque todavía no se ha sincronizado ningún usuario';
 $string['check_publishers'] 		= 'Comprobar la conexión';
@@ -238,4 +243,3 @@ $string['keymanager_assing_nouser'] = 'No se ha seleccionado ning&uacute;n usuar
 $string['checkcredentialko_messageempty'] = 'La credencial no puede ser vacia';
 $string['rcommon_data_store_log'] = 'Directorio para guardar el seguimiento';
 $string['rcommon_data_store_log_desc'] = 'Indique el directoro para guardar el seguimiento';
-?>

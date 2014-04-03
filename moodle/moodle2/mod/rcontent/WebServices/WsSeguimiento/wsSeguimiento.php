@@ -43,8 +43,13 @@ class ErroresSeguimiento
                     "ActividadInvalida" => array("Error" => "1012", "Descripcion" => ""),
                     "CentroInvalido" => array("Error" => "1013", "Descripcion" => ""),
                     "SinPermisosGuardarSeguimiento" => array("Error" => "1014", "Descripcion" => ""),
-                    "EstadoInvalido" => array("Error" => "1015", "Descripcion" => "Estat incorrecte. El valor de l'estat &eacute;s incorrecte"));
-    //fill descriptions errors                    
+                    "EstadoInvalido" => array("Error" => "1015", "Descripcion" => "Estat incorrecte. El valor de l'estat &eacute;s incorrecte"),
+//MARSUPIAL ********** AFEGIT -> Add new text string for invalid idContenidoLMS
+//09/01/2014 . @naseq
+                    "InvalidIdContenidoLMS" => array("Error" => "1016", "Descripcion" => ""));
+
+//*********** FI    
+	//fill descriptions errors                    
     public function __construct()
     {
         $this->errores["UsrNoExisteEnCurso"]["Descripcion"] = get_string('usrnotexists', 'rcontent');
@@ -57,6 +62,10 @@ class ErroresSeguimiento
         $this->errores["ActividadInvalida"]["Descripcion"] = get_string('invalidactivity', 'rcontent');
         $this->errores["CentroInvalido"]["Descripcion"] = get_string('invalidcenter', 'rcontent');
         $this->errores["SinPermisosGuardarSeguimiento"]["Descripcion"] = get_string('permitskeeptrack', 'rcontent');
+//MARSUPIAL ********** AFEGIT -> Add new text string for invalid idContenidoLMS
+//09/01/2014 . @naseq
+        $this->errores["InvalidIdContenidoLMS"]["Descripcion"] = get_string('invalididcontenidolms', 'rcontent');
+//*********** FI
     }
                     
 }
@@ -279,7 +288,20 @@ function ResultadoDetalleExtendido($Resultado)
         
         $ret2 = new ResultadoDetalleExtendidoResponse();
         $ret2->ResultadoDetalleExtendidoResult = new RespuestaResultadoExtendido();
+//MARSUPIAL ********** AFEGIT -> Added new condition to check IdContenidoLMS
+//09/01/2014 . @naseq
+//Query Original
+        $query = "SELECT * FROM {rcontent} where id = " . $Resultado->ResultadoExtendido->idContenidoLMS;
+//New query
+		/*select * from {rcontent} where id in (
+		select rcnt.id, rcba.code, rcba.unitid, rcbu.id from {rcontent} rcnt, {rcommon_books_units} rcbu, {rcommon_books_activities} rcba
+		where rcnt.id = 21 and rcnt.unitid = rcbu.id and rcbu.id = rcba.unitid and rcba.code = 2 and rcnt.activityid = rcba.id);*/
 
+        /*$subquery = "(select rcnt.id from {rcontent} rcnt, {rcommon_books_units} rcbu, {rcommon_books_activities} rcba where rcnt.id =". $Resultado->ResultadoExtendido->idContenidoLMS ." and rcnt.unitid = rcbu.id and rcbu.id = rcba.unitid and rcba.code = ".$Resultado->ResultadoExtendido->idActividad . " and rcnt.activityid = rcba.id)";
+        $query = "SELECT * FROM {rcontent} where id in " . $subquery;*/
+        $rcontent = $DB->get_record_sql($query, array(), IGNORE_MULTIPLE);
+        if (isset($rcontent->id) || $rcontent->id != '') {
+//*********** FI
         if (UserAuthentication($HTTP_RAW_POST_DATA, $Resultado->ResultadoExtendido))
         {
             if ($CFG->center == $Resultado->ResultadoExtendido->idCentro)
@@ -310,8 +332,12 @@ function ResultadoDetalleExtendido($Resultado)
                 else
                 {
                     //seek rcontent data
-                   $query = "SELECT * FROM {$CFG->prefix}rcontent where id = ".$Resultado->ResultadoExtendido->idContenidoLMS;
-                   $rcontent = $DB->get_record_sql($query, array(), IGNORE_MULTIPLE);
+//MARSUPIAL ********** ELIMINAT -> This two lines has been eliminated because they are added before userAuthentication. 
+//This changes has been made to add error code 1016(Invalid IdContenidoLMS).
+//09/01/2014 . @naseq
+                /* $query = "SELECT * FROM {rcontent} where id = " . $Resultado->ResultadoExtendido->idContenidoLMS;
+                   $rcontent = $DB->get_record_sql($query, array(), IGNORE_MULTIPLE); */
+//*********** FI
                    $cm=get_coursemodule_from_instance('rcontent', $rcontent->id, $rcontent->course);
                    $contextmodule = get_context_instance(CONTEXT_MODULE,$cm->id);
                    
@@ -438,6 +464,16 @@ function ResultadoDetalleExtendido($Resultado)
 	                                        $instance->id = $resultid;
 	                                    }
 	                                }
+//MARSUPIAL *********** AFEGIT -> Added to insert each try to the table rcontent_grades if  ForzarGuardar = 1
+//2011.12.19 @naseq                                           
+                                      /*  else if ($Resultado->ResultadoExtendido->ForzarGuardar == 1) {
+                                            $instance->timecreated = time();
+                                            $resultid = $DB->insert_record('rcontent_grades', $instance);
+                                            if ($resultid !== false) {
+                                                $instance->id = $resultid;
+                                            }                                            
+                                        } */
+// ********** FI                                            
 	                                else
 	                                {
 	                                    $instance->id = $rcont_gradeid->id;
@@ -686,7 +722,12 @@ function ResultadoDetalleExtendido($Resultado)
             $DB->insert_record("rcommon_errors_log", $tmp);
             */
         }
-        
+//MARSUPIAL ********** AFEGIT -> Added new condition to check IdContenidoLMS
+//09/01/2014 . @naseq
+        } else {
+            $ret2 = generate_error($errSeg->errores["InvalidIdContenidoLMS"]["Error"], $errSeg->errores["InvalidIdContenidoLMS"]["Descripcion"], "ResultadoDetalleExtendido");
+        }
+//*********** FI   
     }
     catch (Exception $e)
     {

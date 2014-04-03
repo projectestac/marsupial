@@ -293,5 +293,7 @@ $string['invalidunit']='Se ha recibido un código de unidad no valido. - Error u
 $string['invalidactivity']='Se ha recibido un código de actividad no valida. - Error actividad: ';
 $string['invalidcenter']='El código del centro no es válido.';
 $string['permitskeeptrack']='El usuario no tiene permisos para guardar seguimientos.';
-
-?>
+//MARSUPIAL ********** AFEGIT -> Add new text string for invalid idContenidoLMS
+//09/01/2014 . @naseq
+$string['invalididcontenidolms']='Se ha recibido idContenidoLMS no válido.';
+//*********** FI
