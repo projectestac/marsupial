@@ -1,4 +1,4 @@
-<?PHP 
+<?PHP
 // MARSUPIAL *********** AFEGIT -> pluginname
 // 2011.11.18 @abertranb
 $string['pluginname'] ='Recursos remots';
@@ -141,8 +141,8 @@ $string['good_connection'] 		= 'Connexió correcta';
 $string['bad_connection'] 		= 'S\'ha produït un problema en intentar connectar';
 // MARSUPIAL ************ AFEGIT -> New string for bad wsdl connection.
 // 2014.01.13 @naseq
-$string['bad_wsdl_connection']          = 'Comprova la adre&ccedil;a del servei web d\'autenticaci&oacute;.';
-$string['bad_wsdl_connection_alert']    = 'Comprova la adre\u00e7a del servei web d\'autenticaci\u00f3.';
+$string['bad_wsdl_connection']          = 'Comprova l\'adre&ccedil;a del servei web d\'autenticaci&oacute;.';
+$string['bad_wsdl_connection_alert']    = 'Comprova l\'adre&ccedil;a del servei web d\'autenticaci&oacute;.';
 //************ FI
 $string['books'] 			= 'llibres';
 $string['atria_error_information'] 	= 'És possible que l\'error de connexió amb &Agrave;tria es produeixi perquè encara no s\'ha sincronitzat cap usuari/ària';

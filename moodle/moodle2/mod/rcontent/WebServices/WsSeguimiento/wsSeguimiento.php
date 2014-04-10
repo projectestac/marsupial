@@ -254,47 +254,10 @@ function ResultadoDetalleExtendido($Resultado) {
 //MARSUPIAL ********** AFEGIT -> Added new condition to check IdContenidoLMS
 //09/01/2014 . @naseq
 //Query Original
-        $query = "SELECT * FROM {rcontent} where id = " . $Resultado->ResultadoExtendido->idContenidoLMS;
-
-        $rcontent = $DB->get_record_sql($query, array(), IGNORE_MULTIPLE);
+        $rcontent = $DB->get_record('rcontent', array('id'=>$Resultado->ResultadoExtendido->idContenidoLMS));
         if (isset($rcontent->id) && !empty($rcontent->id)) { //validar idContenidoLMS
 //*********** FI
             if (UserAuthentication($HTTP_RAW_POST_DATA, $Resultado->ResultadoExtendido)) {
-//MARSUPIAL ********** AFEGIT -> Validating activity, unit and content in case of forzarGuardar = 1
-//06/02/2014 . @naseq
-//query1 = to compare idContenidoLMS, idActividad, idUnidad
-                $query1 = "select * from {rcontent} rc, {rcommon_books_activities} rba , {rcommon_books_units} rbu"
-                        . " where rc.id = " . $Resultado->ResultadoExtendido->idContenidoLMS
-                        . " and rbu.id = rba.unitid and rc.activityid = rba.id and rc.unitid = rbu.id "
-                        . " and rba.code like '%" . $Resultado->ResultadoExtendido->idActividad . "%'"
-                        . " and rbu.code like '%" . $Resultado->ResultadoExtendido->idUnidad . "%'";
-                $rcontent1 = $DB->get_record_sql($query1, array(), IGNORE_MULTIPLE);
-                if (!$rcontent1) {
-                    if ((property_exists($Resultado->ResultadoExtendido, 'ForzarGuardar') || $Resultado->ResultadoExtendido->ForzarGuardar == 1)) {
-
-//******** query2 = get data if idContendiaLMS and (idAcitividad or idUnidad) found on the rcontent table
-//06/02/2014 . @naseq
-                        $query2 = "select rc.id, rc.activityid, rc.unitid, rc.course, rc.bookid from {rcontent} rc, {rcommon_books_activities} rba , {rcommon_books_units} rbu "
-                                . " where rc.id = " . $Resultado->ResultadoExtendido->idContenidoLMS
-                                . " and rbu.id = rba.unitid and rc.activityid = rba.id and rc.unitid = rbu.id "
-                                . " and (rba.code like '%" . $Resultado->ResultadoExtendido->idActividad . "%' "
-                                . " or rbu.code like '%" . $Resultado->ResultadoExtendido->idUnidad . "%')";
-                        $rcontent2 = $DB->get_record_sql($query2, array(), IGNORE_MULTIPLE);
-                        if (!$rcontent2) {
-                            if (valid_unit_activity($Resultado->ResultadoExtendido, $unidadid, $actividadid, $ret2)) {
-//query3 = When idActivity and idUnidad is valid but not coresponding with the idContentLMS check if this idActivity and idUnidad has any other content assign.
-//if assigned to any idContent other than the idContenidoLMS then change the idContenidoLMS to the new one.
-//06/02/2014 . @naseq
-                                $query3 = "select * from {rcontent} where course = " . $rcontent->course . " and activityid = ".$actividadid." and unitid = ".$unidadid ;
-                                $rcontent3 = $DB->get_record_sql($query3, array(), IGNORE_MULTIPLE);
-                                if($rcontent3){
-                                    $Resultado->ResultadoExtendido->idContenidoLMS = $rcontent3->id;
-                                }
-                            }
-                        }
-                    }
-                }
-//*********** FI
                 if ($CFG->center == $Resultado->ResultadoExtendido->idCentro) {
                     $val = $Resultado->ResultadoExtendido;
 
@@ -326,6 +289,48 @@ function ResultadoDetalleExtendido($Resultado) {
                         /* $query = "SELECT * FROM {rcontent} where id = " . $Resultado->ResultadoExtendido->idContenidoLMS;
                           $rcontent = $DB->get_record_sql($query, array(), IGNORE_MULTIPLE); */
 //*********** FI
+                        ////MARSUPIAL ********** AFEGIT -> Validating activity, unit and content in case of forzarGuardar = 1
+                        //06/02/2014 . @naseq
+                        if ((property_exists($Resultado->ResultadoExtendido, 'ForzarGuardar') || $Resultado->ResultadoExtendido->ForzarGuardar == 1)) {
+                            // query1 = to compare idContenidoLMS, idActividad, idUnidad searching for the same ACTIVITY
+                            $query1 = "SELECT rc.* FROM {rcontent} rc, {rcommon_books} rb, {rcommon_books_activities} rba , {rcommon_books_units} rbu"
+                                . " WHERE rc.id = " . $Resultado->ResultadoExtendido->idContenidoLMS
+                                . " AND rc.bookid = rb.id AND rbu.bookid = rb.id AND rba.unitid = rbu.id  "
+                                . " AND rba.code = '" . $Resultado->ResultadoExtendido->idActividad . "'"
+                                . " AND rbu.code = '" . $Resultado->ResultadoExtendido->idUnidad . "'";
+                            $rcontent = $DB->record_sql($query1, null, IGNORE_MULTIPLE);
+                            if (!$rcontent) {
+                                // query2 = get data if idContenidoLMS and idUnidad found on the rcontent table searching fot the same UNIT
+                                $query2 = "SELECT rc.* FROM {rcontent} rc, {rcommon_books} rb, {rcommon_books_units} rbu"
+                                    . " WHERE rc.id = " . $Resultado->ResultadoExtendido->idContenidoLMS
+                                    . " AND rc.bookid = rb.id AND rbu.bookid = rb.id "
+                                    . " AND rbu.code = '" . $Resultado->ResultadoExtendido->idUnidad . "'";
+                                $rcontent = $DB->record_sql($query2, null, IGNORE_MULTIPLE);
+                                if (!$rcontent) {
+                                    // query2 = get data if idContenidoLMS and idUnidad found on the rcontent table searching fot the same BOOK
+                                    $query2 = "SELECT rc.* FROM {rcontent} rc, {rcommon_books} rb"
+                                        . " WHERE rc.id = " . $Resultado->ResultadoExtendido->idContenidoLMS
+                                        . " AND rc.bookid = rb.id ";
+                                    $rcontent = $DB->record_sql($query2, null, IGNORE_MULTIPLE);
+
+                                    if (valid_unit_activity($Resultado->ResultadoExtendido, $unidadid, $actividadid, $ret2)) {
+                                        //query3 = When idActivity and idUnidad is valid but not coresponding with the idContentLMS check if this idActivity and idUnidad has any other content assign.
+                                        //if assigned to any idContent other than the idContenidoLMS then change the idContenidoLMS to the new one.
+                                        $conditions = array('course'=>$rcontent->course, 'activityid' => $actividadid, 'unitid' =>$unidadid);
+                                        $rcontent3id = $DB->get_field('rcontent','id', $conditions);
+                                        if($rcontent3id){
+                                            $Resultado->ResultadoExtendido->idContenidoLMS = $rcontent3id;
+                                        }
+                                    }
+                                }
+                            }
+
+                            // Set the new Rcontent
+                            if ($rcontent) {
+                                $Resultado->ResultadoExtendido->idContenidoLMS = $rcontent->id;
+                            }
+                        }
+                        //*********** FI
                         $cm = get_coursemodule_from_instance('rcontent', $rcontent->id, $rcontent->course);
                         $contextmodule = get_context_instance(CONTEXT_MODULE, $cm->id);
 

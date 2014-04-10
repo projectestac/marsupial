@@ -171,7 +171,7 @@ function AuthenticateUserContent($data, $usr_creden = false, $showurl = true){
 // MARSUPIAL *********** MODIFICAT -> Added proxy option
 // 2012.08.30 @mmartinez
 // MARSUPIAL *********** MODIFICAT -> Added exception in case of wsdl url is wrong.
-// 2014.01.13 @naseq       
+// 2014.01.13 @naseq
         xdebug_disable();
         try {
             $client = new soapclient($publisher->urlwsauthentication . '?wsdl', $options);
@@ -180,7 +180,7 @@ function AuthenticateUserContent($data, $usr_creden = false, $showurl = true){
             echo '<span style="color:red">' . get_string('bad_wsdl_connection', 'block_rcommon') . '</span></span>';
             die();
         }
-// ************* FI  
+// ************* FI
 // *********** ORIGINAL
 		//$client = new soapclient($publisher->urlwsauthentication.'?wsdl', array('trace' => 1));
 // ************* FI
