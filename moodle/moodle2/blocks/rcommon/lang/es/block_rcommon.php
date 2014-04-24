@@ -1,4 +1,4 @@
-<?PHP 
+<?PHP
 // MARSUPIAL *********** AFEGIT -> pluginname
 // 2011.11.18 @abertranb
 $string['pluginname'] ='Recursos remotos';
@@ -26,15 +26,19 @@ $string['delko'] = 'No ha sido possible borrar los datos, por favor vuelva a int
 // *********** FI
 $string['downloadbookstructures'] = 'Descargar estructura de libros';
 $string['error_authentication'] = 'Error de autenticaci&oacute;n, c&oacute;digo: ';
+
+$string['error_code_1'] = 'URL generada correctamente.';
 $string['error_code_0'] = 'Error inesperado.';
 $string['error_code_-1'] = 'Error al realizar la URL din&aacute;mica.';
-$string['error_code_-2'] = 'El c&oacute;digo de licencia no es v&aacute;lido.';
-$string['error_code_-3'] = 'El Isbn del producto no es v&aacute;lido.';
+$string['error_code_-2'] = 'El credencial/c&oacute;digo de licencia no es v&aacute;lido.';
+$string['error_code_-3'] = 'El ISBN del producto no es v&aacute;lido.';
 $string['error_code_-4'] = 'La licencia ha expirado.';
-$string['error_code_-101'] = 'Autenticaci&oacute;n incorrecta. El usuario que solicita acceso a este
-m&eacute;todo del servicio Web no es correcto.';
-$string['error_code_-102'] = 'Autenticaci&oacute;n incorrecta. El usuario que solicita acceso a este
-m&eacute;todo del servicio Web no tiene permisos suficientes.';
+$string['error_code_-5'] = 'El identificador de la unidad no es v&aacute;lido.';
+$string['error_code_-6'] = 'El identificador de la actividad no es v&aacute;lido.';
+$string['error_code_-7'] = 'Rol incorrecto';
+$string['error_code_-101'] = 'Autenticaci&oacute;n incorrecta. El usuario que solicita acceso a este m&eacute;todo del servicio Web no es correcto.';
+$string['error_code_-102'] = 'Autenticaci&oacute;n incorrecta. El usuario que solicita acceso a este m&eacute;todo del servicio Web no tiene permisos suficientes.';
+
 $string['exit'] = 'Salir';
 // MARSUPIAL ********** AFEGIT -> Insert form key
 //2011.10.24 @mmartinez

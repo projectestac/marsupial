@@ -1,4 +1,4 @@
-<?PHP 
+<?PHP
 // MARSUPIAL *********** AFEGIT -> pluginname
 // 2011.11.18 @abertranb
 $string['pluginname'] ='Remote resources';
@@ -26,15 +26,19 @@ $string['delko'] = 'Unable to delete the data, please try again a few minutes la
 // *********** FI
 $string['downloadbookstructures'] = 'Download books structures';
 $string['error_authentication'] = 'Authentication error: Code: ';
+
+$string['error_code_1'] = 'URL successfully generated';
 $string['error_code_0'] = 'Unexpected error.';
 $string['error_code_-1'] = 'Failed to make the dynamic URL.';
-$string['error_code_-2'] = 'The license code is invalid.';
-$string['error_code_-3'] = 'The product Isbn is not valid.';
+$string['error_code_-2'] = 'The credential/license code is invalid.';
+$string['error_code_-3'] = 'The product ISBN is not valid.';
 $string['error_code_-4'] = 'The license has expired.';
-$string['error_code_-101'] = 'Incorrect authentication. The user requesting access to this
-Web service method is not correct.';
-$string['error_code_-102'] = 'Incorrect authentication. The user requesting access to this
-web service method has insufficient permissions.';
+$string['error_code_-5'] = 'The unit identifier is not valid.';
+$string['error_code_-6'] = 'The activity identifier is not valid.';
+$string['error_code_-7'] = 'The role is not valid.';
+$string['error_code_-101'] = 'Incorrect authentication. The user requesting access to this Web service method is not correct.';
+$string['error_code_-102'] = 'Incorrect authentication. The user requesting access to this Web service method has insufficient permissions.';
+
 $string['exit'] = 'Exit';
 // MARSUPIAL ********** AFEGIT -> Insert form key
 //2011.10.24 @mmartinez

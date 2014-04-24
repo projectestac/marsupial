@@ -26,15 +26,19 @@ $string['delko'] = 'No ha estat possible esborrar les dades, si us plau torni a 
 // *********** FI
 $string['downloadbookstructures'] = 'Descarrega/actualitza l\'estructura dels llibres';
 $string['error_authentication'] = 'Error d\'autenticaci&oacute, codi: ';
+
+$string['error_code_1'] = 'URL generada correctament.';
 $string['error_code_0'] = 'Error inesperat.';
 $string['error_code_-1'] = 'Error al realitzar la URL din&agrave;mica.';
-$string['error_code_-2'] = 'El codi de llicencia no es v&agrave;lid.';
-$string['error_code_-3'] = 'El Isbn del producte no es v&agrave;lid.';
-$string['error_code_-4'] = 'La llicencia ha expirat.';
-$string['error_code_-101'] = 'Autenticaci&oacute; incorrecta. L\'usuari que sol&middot;licitat acc&eacute;s a aquest
-m&egrave;tode del servei web no es correcte.';
-$string['error_code_-102'] = 'Autenticaci&oacute; incorrecta. L\'usuari que sol&middot;licita acc&eacute;s a aquest
-m&egrave;tode del servei web no te permisos suficients.';
+$string['error_code_-2'] = 'La credencial/llicència no és vàlida.';
+$string['error_code_-3'] = 'El ISBN del producte no es v&agrave;lid.';
+$string['error_code_-4'] = 'La llicència ha expirat.';
+$string['error_code_-5'] = 'L\'identificador de la unitat no és vàlid.';
+$string['error_code_-6'] = 'L\'identificador de l\'activitat no és vàlid.';
+$string['error_code_-7'] = 'Rol incorrecte';
+$string['error_code_-101'] = 'Autenticaci&oacute; incorrecta. L\'usuari que sol&middot;licitat acc&eacute;s a aquest m&egrave;tode del servei web no es correcte.';
+$string['error_code_-102'] = 'Autenticaci&oacute; incorrecta. L\'usuari que sol&middot;licita acc&eacute;s a aquest m&egrave;tode del servei web no te permisos suficients.';
+
 $string['exit'] = 'Surt';
 // MARSUPIAL ********** AFEGIT -> Insert form key
 //2011.10.24 @mmartinez
