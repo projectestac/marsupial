@@ -1,32 +1,46 @@
 Changes in progress
 ---------------------------------------------------------------------------------------
 
+ - Category field added to rcontent activities
+ - Fixed bug on checking credentials URL
+ - Fixed saving grade items on activities with ForzarGuardar=1
+ - Code sorting
+ - Fixed version.php on mybooks block
+ - Specify error 1016
+ - Some improvements on Marsupial configuration style
+ - Language changes and some error translations added
+ - Open rcontent popup windows throught GET instead of POST
+ - Rcommon Log interface
 
 Version 2.0.4 (2013-12-09)
 ---------------------------------------------------------------------------------------
-- Reviewed code to avoid some problems with PostgreSQL (patch reported by UPCnet)
-- Changed some string functions from unibyte to multibyte
-- Cleaned some code and comments 
-- Migrated some SQL functions to Moodle's API best choices
-- Changed some deprecated methods (context)
+
+ - Reviewed code to avoid some problems with PostgreSQL (patch reported by UPCnet)
+ - Changed some string functions from unibyte to multibyte
+ - Cleaned some code and comments 
+ - Migrated some SQL functions to Moodle's API best choices
+ - Changed some deprecated methods (context)
 
 
 Version 2.0.3 (2013-10-09)
 ---------------------------------------------------------------------------------------
-- Reviewed SQL query to avoid problems with case-sensitive databases (patch reported by Educamos)
+
+ - Reviewed SQL query to avoid problems with case-sensitive databases (patch reported by Educamos)
 
 
 Version 2.0.2 (2013-09-19)
 ---------------------------------------------------------------------------------------
-- Fixed bug with rscorm to let update the launch value when it has been changed (patch reported by Santillana)
-- Added check to update WSDL file with the new ForzarGuardar parameter
+
+ - Fixed bug with rscorm to let update the launch value when it has been changed (patch reported by Santillana)
+ - Added check to update WSDL file with the new ForzarGuardar parameter
 
 
 Version 2.0.1 (2013-09-10)
 ---------------------------------------------------------------------------------------
-- Added SVG icons for rcontent and rscorm
-- Fixed bug with get_record call parameters in rcontent module
-- Added ForzarGuardar parameter to rcontent module
+
+ - Added SVG icons for rcontent and rscorm
+ - Fixed bug with get_record call parameters in rcontent module
+ - Added ForzarGuardar parameter to rcontent module
 
 
 Version 2.0 (2013-04-22)
