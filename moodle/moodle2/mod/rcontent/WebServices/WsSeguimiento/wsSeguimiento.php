@@ -254,9 +254,20 @@ function ResultadoDetalleExtendido($Resultado) {
 //MARSUPIAL ********** AFEGIT -> Added new condition to check IdContenidoLMS
 //09/01/2014 . @naseq
 //Query Original
-        $rcontent = $DB->get_record('rcontent', array('id'=>$Resultado->ResultadoExtendido->idContenidoLMS));
+        $rcontent = $DB->get_record('rcontent', array('id' => $Resultado->ResultadoExtendido->idContenidoLMS));
         if (isset($rcontent->id) && !empty($rcontent->id)) { //validar idContenidoLMS
 //*********** FI
+            ////MARSUPIAL ********** AFEGIT -> Validating activity, unit and content in case of forzarGuardar = 1
+            //06/02/2014 . @naseq
+            if ((property_exists($Resultado->ResultadoExtendido, 'ForzarGuardar') || $Resultado->ResultadoExtendido->ForzarGuardar == 1)) {
+                $real_rcontent = get_real_rcontent($Resultado->ResultadoExtendido);
+                if($real_rcontent){
+                    $rcontent = $real_rcontent;
+                    $Resultado->ResultadoExtendido->idContenidoLMS = $rcontent->id;
+                    log_to_file('ForzarGuardar changed idContenidoLMS to '.$rcontent->id);
+                }
+            }
+            //*********** FI
             if (UserAuthentication($HTTP_RAW_POST_DATA, $Resultado->ResultadoExtendido)) {
                 if ($CFG->center == $Resultado->ResultadoExtendido->idCentro) {
                     $val = $Resultado->ResultadoExtendido;
@@ -283,56 +294,14 @@ function ResultadoDetalleExtendido($Resultado) {
 //*********** FI
                     else {
                         //seek rcontent data
-//MARSUPIAL ********** ELIMINAT -> This two lines has been eliminated because they are added before userAuthentication.
-//This changes has been made to add error code 1016(Invalid IdContenidoLMS).
-//09/01/2014 . @naseq
+                        //MARSUPIAL ********** ELIMINAT -> This two lines has been eliminated because they are added before userAuthentication.
+                        //This changes has been made to add error code 1016(Invalid IdContenidoLMS).
+                        //09/01/2014 . @naseq
                         /* $query = "SELECT * FROM {rcontent} where id = " . $Resultado->ResultadoExtendido->idContenidoLMS;
                           $rcontent = $DB->get_record_sql($query, array(), IGNORE_MULTIPLE); */
-//*********** FI
-                        ////MARSUPIAL ********** AFEGIT -> Validating activity, unit and content in case of forzarGuardar = 1
-                        //06/02/2014 . @naseq
-                        if ((property_exists($Resultado->ResultadoExtendido, 'ForzarGuardar') || $Resultado->ResultadoExtendido->ForzarGuardar == 1)) {
-                            // query1 = to compare idContenidoLMS, idActividad, idUnidad searching for the same ACTIVITY
-                            $query1 = "SELECT rc.* FROM {rcontent} rc, {rcommon_books} rb, {rcommon_books_activities} rba , {rcommon_books_units} rbu"
-                                . " WHERE rc.id = " . $Resultado->ResultadoExtendido->idContenidoLMS
-                                . " AND rc.bookid = rb.id AND rbu.bookid = rb.id AND rba.unitid = rbu.id  "
-                                . " AND rba.code = '" . $Resultado->ResultadoExtendido->idActividad . "'"
-                                . " AND rbu.code = '" . $Resultado->ResultadoExtendido->idUnidad . "'";
-                            $rcontent = $DB->record_sql($query1, null, IGNORE_MULTIPLE);
-                            if (!$rcontent) {
-                                // query2 = get data if idContenidoLMS and idUnidad found on the rcontent table searching fot the same UNIT
-                                $query2 = "SELECT rc.* FROM {rcontent} rc, {rcommon_books} rb, {rcommon_books_units} rbu"
-                                    . " WHERE rc.id = " . $Resultado->ResultadoExtendido->idContenidoLMS
-                                    . " AND rc.bookid = rb.id AND rbu.bookid = rb.id "
-                                    . " AND rbu.code = '" . $Resultado->ResultadoExtendido->idUnidad . "'";
-                                $rcontent = $DB->record_sql($query2, null, IGNORE_MULTIPLE);
-                                if (!$rcontent) {
-                                    // query2 = get data if idContenidoLMS and idUnidad found on the rcontent table searching fot the same BOOK
-                                    $query2 = "SELECT rc.* FROM {rcontent} rc, {rcommon_books} rb"
-                                        . " WHERE rc.id = " . $Resultado->ResultadoExtendido->idContenidoLMS
-                                        . " AND rc.bookid = rb.id ";
-                                    $rcontent = $DB->record_sql($query2, null, IGNORE_MULTIPLE);
-
-                                    if (valid_unit_activity($Resultado->ResultadoExtendido, $unidadid, $actividadid, $ret2)) {
-                                        //query3 = When idActivity and idUnidad is valid but not coresponding with the idContentLMS check if this idActivity and idUnidad has any other content assign.
-                                        //if assigned to any idContent other than the idContenidoLMS then change the idContenidoLMS to the new one.
-                                        $conditions = array('course'=>$rcontent->course, 'activityid' => $actividadid, 'unitid' =>$unidadid);
-                                        $rcontent3id = $DB->get_field('rcontent','id', $conditions);
-                                        if($rcontent3id){
-                                            $Resultado->ResultadoExtendido->idContenidoLMS = $rcontent3id;
-                                        }
-                                    }
-                                }
-                            }
-
-                            // Set the new Rcontent
-                            if ($rcontent) {
-                                $Resultado->ResultadoExtendido->idContenidoLMS = $rcontent->id;
-                            }
-                        }
                         //*********** FI
                         $cm = get_coursemodule_from_instance('rcontent', $rcontent->id, $rcontent->course);
-                        $contextmodule = get_context_instance(CONTEXT_MODULE, $cm->id);
+                        $contextmodule = context_module::instance($cm->id);
 
                         if (valid_user($Resultado->ResultadoExtendido->idUsuario, $rcontent->course)) {
                             if (has_capability('mod/rcontent:savetrack', $contextmodule, $Resultado->ResultadoExtendido->idUsuario)) {
@@ -463,7 +432,7 @@ function ResultadoDetalleExtendido($Resultado) {
                                         if ($resultid > 0) {
                                             $ret2->ResultadoDetalleExtendidoResult->Resultado = 'OK';
                                         } else {
-                                            $ret2 = generate_error($errSeg->errores["GuardarGrades"]["Error"], $errSeg->errores["GuardarGrades"]["Descripcion"], "ResultadoDetalleExtendido");
+                                            $ret2 = generate_error($errSeg->errores["GuardarGrades"]["Error"], $errSeg->errores["GuardarGrades"]["Descripcion"], "ResultadoDetalleExtendido",$cm->id);
 
                                             /*
                                               //descripcion de error
@@ -593,12 +562,12 @@ function ResultadoDetalleExtendido($Resultado) {
                                                 $instance->urlviewresults = $detalle->URLVerResultados;
                                             }
 
-                                            $select = 'WHERE userid=' . $Resultado->ResultadoExtendido->idUsuario;
-                                            $select .= ' AND rcontentid=' . $Resultado->ResultadoExtendido->idContenidoLMS;
-                                            $select .= ' AND unitid=' . $unidadid;
-                                            $select .= ' AND activityid=' . $actividadid;
-                                            $select .= " AND code='" . $detalle->IdDetalle . "'";
-                                            $select .= (isset($detalle->Intentos)) ? ' AND attempt=' . $detalle->Intentos : ' AND attempt=1';
+                                            $select = array('userid' => $Resultado->ResultadoExtendido->idUsuario,
+                                                            'rcontentid' => $Resultado->ResultadoExtendido->idContenidoLMS,
+                                                            'unitid' => $unidadid,
+                                                            'activityid' => $actividadid,
+                                                            'code' => $detalle->IdDetalle);
+                                            $select['attempt'] = isset($detalle->Intentos)? $detalle->Intentos : 1;
 
                                             //MARSUPIAL *********** ELIMINAT -> Not check the FechaHoraInicio field
                                             //2011.12.19 @abertranb
@@ -606,22 +575,20 @@ function ResultadoDetalleExtendido($Resultado) {
                                             //    $select = $select. ' AND starttime='. $detalle->FechaHoraInicio;
                                             // ********** FI
 
-
-                                            $resultid = 0;
-
-                                            if (!$rcont_gradeid = $DB->get_record_sql("SELECT id FROM {rcontent_grades_details}" . ' ' . $select, array(), IGNORE_MULTIPLE)) {
+                                            if (!$rcont_gradeid = $DB->get_field('rcontent_grades_details', 'id', $select)) {
                                                 $instance->timecreated = time();
                                                 $resultid = $DB->insert_record('rcontent_grades_details', $instance);
                                             } else {
-                                                $instance->id = $rcont_gradeid->id;
-                                                $resultid = $DB->update_record('rcontent_grades_details', $instance);
+                                                $instance->id = $rcont_gradeid;
+                                                $resultid = $rcont_gradeid;
+                                                $DB->update_record('rcontent_grades_details', $instance);
                                             }
                                         }
 
-                                        if ($resultid > 0)
+                                        if ($resultid > 0) {
                                             $ret2->ResultadoDetalleExtendidoResult->Resultado = 'OK';
-                                        else {
-                                            $ret2 = generate_error($errSeg->errores["GuardarGradesDetail"]["Error"], $errSeg->errores["GuardarGradesDetail"]["Descripcion"], "ResultadoDetalleExtendido");
+                                        } else {
+                                            $ret2 = generate_error($errSeg->errores["GuardarGradesDetail"]["Error"], $errSeg->errores["GuardarGradesDetail"]["Descripcion"], "ResultadoDetalleExtendido",$cm->id);
 
                                             /*
                                               //descripcion de error
@@ -651,19 +618,18 @@ function ResultadoDetalleExtendido($Resultado) {
                                         }
                                     }
                                 }
+                            } else {
+                                $ret2 = generate_error($errSeg->errores["SinPermisosGuardarSeguimiento"]["Error"], $errSeg->errores["SinPermisosGuardarSeguimiento"]["Descripcion"] . " - " . get_string('user', 'rcontent') . ": {$Resultado->ResultadoExtendido->idUsuario}", "ResultadoDetalleExtendido",$cm->id);
                             }
-                            else
-                                $ret2 = generate_error($errSeg->errores["SinPermisosGuardarSeguimiento"]["Error"], $errSeg->errores["SinPermisosGuardarSeguimiento"]["Descripcion"] . " - " . get_string('user', 'rcontent') . ": {$Resultado->ResultadoExtendido->idUsuario}", "ResultadoDetalleExtendido");
+                        } else {
+                            $ret2 = generate_error($errSeg->errores["UsrNoExisteEnCurso"]["Error"], $errSeg->errores["UsrNoExisteEnCurso"]["Descripcion"] . " - " . get_string('user', 'rcontent') . ": {$Resultado->ResultadoExtendido->idUsuario} - " . get_string('course', 'rcontent') . ": {$rcontent->course}", "ResultadoDetalleExtendido",$cm->id);
                         }
-                        else
-                            $ret2 = generate_error($errSeg->errores["UsrNoExisteEnCurso"]["Error"], $errSeg->errores["UsrNoExisteEnCurso"]["Descripcion"] . " - " . get_string('user', 'rcontent') . ": {$Resultado->ResultadoExtendido->idUsuario} - " . get_string('course', 'rcontent') . ": {$rcontent->course}", "ResultadoDetalleExtendido");
                     }
+                } else {
+                    $ret2 = generate_error($errSeg->errores["CentroInvalido"]["Error"], $errSeg->errores["CentroInvalido"]["Descripcion"] . " - " . get_string('center', 'rcontent') . ": {$CFG->center} - {$Resultado->ResultadoExtendido->idCentro}", "ResultadoDetalleExtendido",$cm->id);
                 }
-                else
-                    $ret2 = generate_error($errSeg->errores["CentroInvalido"]["Error"], $errSeg->errores["CentroInvalido"]["Descripcion"] . " - " . get_string('center', 'rcontent') . ": {$CFG->center} - {$Resultado->ResultadoExtendido->idCentro}", "ResultadoDetalleExtendido");
-            }
-            else {
-                $ret2 = generate_error($errSeg->errores["Autenticacion"]["Error"], $errSeg->errores["Autenticacion"]["Descripcion"], "ResultadoDetalleExtendido");
+            } else {
+                $ret2 = generate_error($errSeg->errores["Autenticacion"]["Error"], $errSeg->errores["Autenticacion"]["Descripcion"], "ResultadoDetalleExtendido",$cm->id);
 
                 /*
                   //descripcion de error
@@ -695,11 +661,11 @@ function ResultadoDetalleExtendido($Resultado) {
 //MARSUPIAL ********** AFEGIT -> Added new condition to check IdContenidoLMS
 //09/01/2014 . @naseq
         } else {
-            $ret2 = generate_error($errSeg->errores["InvalidIdContenidoLMS"]["Error"], $errSeg->errores["InvalidIdContenidoLMS"]["Descripcion"], "ResultadoDetalleExtendido");
+            $ret2 = generate_error($errSeg->errores["InvalidIdContenidoLMS"]["Error"], $errSeg->errores["InvalidIdContenidoLMS"]["Descripcion"], "ResultadoDetalleExtendido",$cm->id);
         }
 //*********** FI
     } catch (Exception $e) {
-        $ret2 = generate_error($e->getCode(), $e->getMessage(), "ResultadoDetalleExtendido");
+        $ret2 = generate_error($e->getCode(), $e->getMessage(), "ResultadoDetalleExtendido",$cm->id);
 
         /*
           //descripcion de error
@@ -723,8 +689,6 @@ function ResultadoDetalleExtendido($Resultado) {
 function valid_user($userid, $courseid) {
     global $CFG, $DB;
 
-// MARSUPIAL ************* MODIFICAT -> Fix bug, in PostgreSQL this statment was wrong
-// 2011.09.27 @mmartinez
     $select = "SELECT DISTINCT c.id AS curseid, u.id AS userid
                FROM {course} c
                LEFT OUTER JOIN {context} cx ON c.id = cx.instanceid
@@ -733,16 +697,6 @@ function valid_user($userid, $courseid) {
                WHERE cx.contextlevel = '50'
                AND c.id = {$courseid}
                AND u.id = {$userid}";
-// ************ ORIGINAL
-     /*$select = "SELECT DISTINCT c.id curseid, u.id userid
-               FROM {course} c
-               LEFT OUTER JOIN {context} cx ON c.id = cx.instanceid
-               LEFT OUTER JOIN {role_assignments} ra ON cx.id = ra.contextid
-               LEFT OUTER JOIN {user} u ON ra.userid = u.id
-               WHERE cx.contextlevel = '50'
-               AND c.id = {$courseid}
-               AND u.id = {$userid}";*/
-// ************ FI
 
     return ($DB->get_record_sql($select, array(), IGNORE_MULTIPLE) != false);
 }
@@ -874,7 +828,7 @@ function valid_activity($ResultExt, $book, $rcontent, $unidad, &$actividad) {
     try {
         //busco la actividad por actividadid del rcontent, excepto cuando está presente el parámetro ForzarGuardar y es igual a 1
         if ($rcontent->activityid != 0 && (!property_exists($ResultExt, 'ForzarGuardar') || $ResultExt->ForzarGuardar != 1)) {
-            $actividad = $DB->get_record_sql("SELECT * FROM {rcommon_books_activities} WHERE id = " . $rcontent->activityid, array(), IGNORE_MULTIPLE);
+            $actividad = $DB->get_record('rcommon_books_activities',  array('id' => $rcontent->activityid));
 
             //if rcontent has a specific activity
             //error if you come from or are not equal ws
@@ -884,14 +838,8 @@ function valid_activity($ResultExt, $book, $rcontent, $unidad, &$actividad) {
 
         if (isset($ResultExt->idActividad)) {
             //buscamos la unidad por codigo
-            if ($actividad == false) {
-// XTEC ************ MODIFICAT -> Fixed bug in the searching of the stored activities values
-// 2012.03.01 @mmartinez
-                $select = "SELECT * FROM {rcommon_books_activities} WHERE unitid = " . $unidad->id . " AND code = '" . $ResultExt->idActividad . "'";
-// ********** ORIGINAL
-                //$select = "SELECT * FROM {rcommon_books_activities} WHERE unitid = ".$unidad->id." AND code = '".$ResultExt->idActividad."'";
-// ********** FI
-                $actividad = $DB->get_record_sql($select, array(), IGNORE_MULTIPLE);
+            if (!$actividad) {
+                $actividad = $DB->get_record('rcommon_books_activities', array('unitid' => $unidad->id, 'code' => $ResultExt->idActividad), '*', IGNORE_MULTIPLE);
             }
 
             //si existe la unidad pero cambia el orden o el titulo
@@ -905,7 +853,7 @@ function valid_activity($ResultExt, $book, $rcontent, $unidad, &$actividad) {
             if ($book->structureforaccess == 1) {
                 //si no se ha encontrado la unidad o
                 //se ha encontrado pero cambia el nombre o orden llamamos al ws
-                if ($actividad == false || $actualizar_actividad) {
+                if (!$actividad || $actualizar_actividad) {
 // XTEC ************ MODIFICAT -> When recive a non stored unit/activity and call to the book structure ws just get the structure of the selected book, not all the catalog for this publisher
 // 2012.03.01 @mmartinez
                     $publisher = $DB->get_record('rcommon_publisher', array('id' => $book->publisherid));
@@ -916,8 +864,8 @@ function valid_activity($ResultExt, $book, $rcontent, $unidad, &$actividad) {
 // XTEC ************ MODIFICAT -> Fixed bug in the processing of received unit/activity title when it's diferent from the stored one
 // 2012.03.01 @mmartinez
                     //obtengo los nuevos datos de la actividad
-                    if ($actividad == false) {
-                        $actividad = $DB->get_record_sql("SELECT id FROM {rcommon_books_activities} WHERE unitid = " . $unidad->id . " AND code = '" . $ResultExt->idActividad . "'", array(), IGNORE_MULTIPLE);
+                    if (!$actividad) {
+                        $actividad = $DB->get_record('rcommon_books_activities', array('unitid' => $unidad->id, 'code' => $ResultExt->idActividad), '*',  IGNORE_MULTIPLE);
                     }
                     //y vuelvo a comprobar si coincide el t�tulo o no
 // MARSUPIAL ************ MODIFICAT -> Just update if no isset unit/actividad title or no isset unit/activity order
@@ -970,7 +918,7 @@ function valid_activity($ResultExt, $book, $rcontent, $unidad, &$actividad) {
                     $add = $DB->insert_record('rcommon_books_activities', $instance);
                     log_to_file("wsSeguimiento: function valid_activity - Add new activity " . (($add) ? 'OK' : 'KO (instance:' . serialize($instance) . ')'));
 
-                    $actividad = $DB->get_record_sql($select, array(), IGNORE_MULTIPLE);
+                    $actividad = $DB->get_record('rcommon_books_activities', array('unitid' => $unidad->id, 'code' => $ResultExt->idActividad), '*',  IGNORE_MULTIPLE);
                 }
                 // if the title or order to update the register changed
                 else {
@@ -998,10 +946,10 @@ function valid_unit_activity($ResultExt, &$unidadid, &$actividadid, &$err) {
         $errSeg = new ErroresSeguimiento();
 
         //search rcontent
-        $rcontent = $DB->get_record_sql("SELECT * FROM {rcontent} where id = " . $ResultExt->idContenidoLMS, array(), IGNORE_MULTIPLE);
+        $rcontent = $DB->get_record('rcontent', array('id' => $ResultExt->idContenidoLMS));
 
         //search book
-        if ($book = $DB->get_record_sql("SELECT * FROM {rcommon_books} where id = {$rcontent->bookid}", array(), IGNORE_MULTIPLE)) {
+        if ($book = $DB->get_record('rcommon_books', array('id' => $rcontent->bookid))) {
 
             if (valid_unit($ResultExt, $book, $rcontent, $unidad)) {
 //MARSUPIAL *********** MODIFICAT -> Extra control to prevend posible notifications display
@@ -1039,15 +987,15 @@ function UserAuthentication($post_data, $ResultExt) {
 
     try {
         if (isset($ResultExt->idContenidoLMS)) {
-            if ($rcontent = $DB->get_record_sql("SELECT * FROM {rcontent} where id = " . $ResultExt->idContenidoLMS, array(), IGNORE_MULTIPLE)) {
-                if ($book = $DB->get_record_sql("SELECT * FROM {rcommon_books} where id = {$rcontent->bookid}", array(), IGNORE_MULTIPLE)) {
+            if ($bookid = $DB->get_field('rcontent', 'bookid' ,array('id' => $ResultExt->idContenidoLMS))) {
+                if ($publisherid = $DB->get_field('rcommon_books', 'publisherid', array('id' => $bookid))) {
                     $post = rcommon_xml2array($post_data);
 
                     $keys = array("Envelope", "Header", "WSEAuthenticateHeader", "User", "value");
                     if ($valor = rcommond_findarrayvalue($post, $keys)) {
                         //if (isset($post["soapenv:Envelope"]["soapenv:Header"]["seg:WSEAuthenticateHeader"]["seg:User"]["value"]))
 //********** MODIFICAT MARSUPIAL - changed validation table to rcommon_publisher
-                        if ($track_credent = $DB->get_record_sql("SELECT * FROM {rcommon_publisher} where id = " . $book->publisherid, array(), IGNORE_MULTIPLE)) {
+                        if ($track_credent = $DB->get_record('rcommon_publisher',array('id' => $publisherid))) {
 //**********
                             $keys = array("Envelope", "Header", "WSEAuthenticateHeader", "User", "value");
                             $user_pub = rcommond_findarrayvalue($post, $keys);
@@ -1071,8 +1019,103 @@ function UserAuthentication($post_data, $ResultExt) {
     }
 }
 
-function generate_error($codError, $descError, $functionError) {
+function get_real_rcontent($ResultadoExtendido){
     global $DB;
+
+    log_to_file("Forzar Guardar");
+
+    $rcontentoriginalid = $ResultadoExtendido->idContenidoLMS;
+    $rcontent_original = $DB->get_record('rcontent',array('id'=>$rcontentoriginalid));
+
+    // Original rcontent not found
+    if(!$rcontent_original)  return false;
+
+    log_to_file('Original rcontenid:'.$rcontentoriginalid);
+
+    // Search BOOK
+    $book = $DB->get_record('rcommon_books',array('id'=>$rcontent_original->bookid));
+    // Book ID not found
+    if(!$book) return false;
+    log_to_file('bookid:'.$book->id);
+
+    // Search UNIT
+    $unitcode = is_string($ResultadoExtendido->idUnidad) ? $ResultadoExtendido->idUnidad:0;
+    if($unitcode) {
+        $unit = $DB->get_record('rcommon_books_units',array('code'=>$unitcode, 'bookid'=>$book->id));
+        // Unit Code not found
+        if(!$unit) return false;
+    } else {
+        // No unit provided, the real rcontent is the original
+        return false;
+    }
+    log_to_file('unit:'.$unit->code.'-'.$unit->id);
+
+    // Search ACTIVITY
+    $activitycode = is_string($ResultadoExtendido->idActividad) ? $ResultadoExtendido->idActividad:0;
+    if($activitycode){
+        $activity = $DB->get_record('rcommon_books_activities',array('code'=>$activitycode, 'unitid'=>$unit->id, 'bookid'=>$book->id));
+        // Activity Code not found
+        if(!$activity) return false;
+        if($rcontent_original->unitid == $unit->id && $rcontent_original->activityid == $activity->id){
+            // Unit and activity match, the real rcontent is the original
+            return false;
+        }
+        log_to_file('activity:'.$activity->code.'-'.$activity->id);
+    } else if($rcontent_original->unitid == $unit->id) {
+         // Unit match but No activity provided, the real rcontent is the original
+         return false;
+    }
+
+    $rcontents = false;
+    // ALL OK Searching for real Rcontent with activity
+    if($activitycode) {
+        $rcontents = $DB->get_records('rcontent', array('bookid'=>$book->id, 'unitid'=>$unit->id, 'activityid'=>$activity->id), 'id');
+    }
+    if(!$rcontents) {
+        // Not found with activity Searching for real Rcontent without activity
+        $rcontents = $DB->get_records('rcontent', array('bookid'=>$book->id, 'unitid'=>$unit->id), 'id');
+    }
+
+    // Something found, validating data
+    if ($rcontents) {
+        //Filter only the Rcontets with user access
+        $filtered_rcontents = array();
+        foreach($rcontents as $rcontent){
+            if (valid_user($ResultadoExtendido->idUsuario, $rcontent->course)) {
+                $cm = get_coursemodule_from_instance('rcontent', $rcontent->id, $rcontent->course);
+                $contextmodule = context_module::instance($cm->id);
+                if (has_capability('mod/rcontent:savetrack', $contextmodule, $ResultadoExtendido->idUsuario)) {
+                    $filtered_rcontents[] = $rcontent;
+                }
+            }
+        }
+
+        if($filtered_rcontents) {
+            if(count($filtered_rcontents) == 1){
+                // Only one record, OK!
+                return array_shift($filtered_rcontents);
+            } else {
+                log_to_file('Warning, more than one valid rcontent found');
+                // More than one, try courses first
+                foreach($rcontents as $rcontent){
+                    if($rcontent->course == $rcontent_original->course){
+                        // First with the same course
+                        log_to_file('Returned the first with the same course');
+                        return $rcontent;
+                    }
+                }
+
+                log_to_file('All rcontents found outside the original course, returning the first');
+                return array_shift($rcontents);
+            }
+        }
+    }
+
+    return false;
+}
+
+function generate_error($codError, $descError, $functionError, $cmid = null) {
+    global $DB, $USER, $COURSE;
     try {
         $ret_error = new ResultadoDetalleExtendidoResponse();
         $ret_error->ResultadoDetalleExtendidoResult = new RespuestaResultadoExtendido();
@@ -1092,9 +1135,9 @@ function generate_error($codError, $descError, $functionError) {
         $tmp->time = time();
         $tmp->userid = $USER->id;
         $tmp->ip = $_SERVER['REMOTE_ADDR'];
-        //$tmp->course    =  $data->course;
+        $tmp->course    =  isset($COURSE->id) ? $COURSE->id : null;
         $tmp->module = 'rcontent';
-        //$tmp->cmid      =  $data->cmid;
+        $tmp->cmid      =  $cmid;
         $tmp->action = $functionError . "_error";
         $tmp->url = $_SERVER['REQUEST_URI'];
 //MARSUPIAL *********** MODIFICAT -> Fixed bug when inserting data in rcommon_errors_log
@@ -1103,9 +1146,6 @@ function generate_error($codError, $descError, $functionError) {
 //********** ORIGINAL
 //      $tmp->info      =  'Error '.$functionError.': '.get_string('code','rcontent').': '.$ret_error->ResultadoDetalleExtendidoResult->DetalleError->Codigo.' - '.$ret_error->ResultadoDetalleExtendidoResult->DetalleError->Descripcion;
 //********** FI
-
-
-
         $DB->insert_record("rcommon_errors_log", $tmp);
 
         log_to_file("wsSeguimiento failed: " . $descError);

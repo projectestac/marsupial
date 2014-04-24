@@ -172,7 +172,7 @@ function AuthenticateUserContent($data, $usr_creden = false, $showurl = true){
 // 2012.08.30 @mmartinez
 // MARSUPIAL *********** MODIFICAT -> Added exception in case of wsdl url is wrong.
 // 2014.01.13 @naseq
-        xdebug_disable();
+        //xdebug_disable();
         try {
             $client = new soapclient($publisher->urlwsauthentication . '?wsdl', $options);
         } catch (Exception $e) {
@@ -207,7 +207,7 @@ function AuthenticateUserContent($data, $usr_creden = false, $showurl = true){
 //2011.09.16 @sarjona
         $context = context_course::instance($data->course);
 //************** ORIGINAL
-        /* $context = get_context_instance(CONTEXT_COURSE,$SESSION->cal_course_referer);*/
+        /* $context = context_course::instance($SESSION->cal_course_referer);*/
 //************** FI
 		$iduserrole = array();
 		if ($roles = get_user_roles($context, $USER->id)) {
