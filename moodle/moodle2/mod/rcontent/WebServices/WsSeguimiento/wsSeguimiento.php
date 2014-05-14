@@ -402,28 +402,30 @@ function ResultadoDetalleExtendido($Resultado) {
                                             $instance->urlviewresults = $dat_result->URLVerResultados;
                                         }
 
-                                        $select = 'WHERE userid=' . $Resultado->ResultadoExtendido->idUsuario;
-                                        $select .= ' AND rcontentid=' . $Resultado->ResultadoExtendido->idContenidoLMS;
-                                        $select .= ' AND unitid=' . $unidadid;
-                                        $select .= ' AND activityid=' . $actividadid;
-                                        $select .= (isset($dat_result->Intentos)) ? ' AND attempt=' . $dat_result->Intentos : ' AND attempt=1';
 
-//MARSUPIAL *********** ELIMINAT -> Not check the FechaHoraInicio field
-//2011.12.19 @abertranb
-//	                                if (isset($dat_result->FechaHoraInicio))
-//	                                    $select = $select. ' AND starttime='. $dat_result->FechaHoraInicio;
-// ********** FI
+                                        $select = array('userid' => $Resultado->ResultadoExtendido->idUsuario,
+                                                        'rcontentid' => $Resultado->ResultadoExtendido->idContenidoLMS,
+                                                        'unitid' => $unidadid,
+                                                        'activityid' => $actividadid,
+                                                        'attempt' => $instance->attempt);
+
+                                        //MARSUPIAL *********** ELIMINAT -> Not check the FechaHoraInicio field
+                                        //2011.12.19 @abertranb
+                                        //if (isset($detalle->FechaHoraInicio))
+                                        //    $select = $select. ' AND starttime='. $detalle->FechaHoraInicio;
+                                        // ********** FI
 
                                         $resultid = 0;
-                                        if (!$rcont_gradeid = $DB->get_record_sql("SELECT DISTINCT id FROM {rcontent_grades}" . ' ' . $select, array(), IGNORE_MULTIPLE)) {
+                                        if (!$rcont_gradeid = $DB->get_field('rcontent_grades', 'id', $select)) {
                                             $instance->timecreated = time();
                                             $resultid = $DB->insert_record('rcontent_grades', $instance);
                                             if ($resultid !== false) {
                                                 $instance->id = $resultid;
                                             }
                                         } else {
-                                            $instance->id = $rcont_gradeid->id;
-                                            $resultid = $DB->update_record('rcontent_grades', $instance);
+                                            $instance->id = $rcont_gradeid;
+                                            $resultid = $rcont_gradeid;
+                                            $DB->update_record('rcontent_grades', $instance);
                                         }
 //MARSUPIAL *********** AFEGIT -> Moved here to update grades after update rcontent_grades
 //2011.06.02 @mmartinez
@@ -566,8 +568,8 @@ function ResultadoDetalleExtendido($Resultado) {
                                                             'rcontentid' => $Resultado->ResultadoExtendido->idContenidoLMS,
                                                             'unitid' => $unidadid,
                                                             'activityid' => $actividadid,
-                                                            'code' => $detalle->IdDetalle);
-                                            $select['attempt'] = isset($detalle->Intentos)? $detalle->Intentos : 1;
+                                                            'code' => $detalle->IdDetalle,
+                                                            'attempt' => $instance->attempt);
 
                                             //MARSUPIAL *********** ELIMINAT -> Not check the FechaHoraInicio field
                                             //2011.12.19 @abertranb
@@ -578,6 +580,9 @@ function ResultadoDetalleExtendido($Resultado) {
                                             if (!$rcont_gradeid = $DB->get_field('rcontent_grades_details', 'id', $select)) {
                                                 $instance->timecreated = time();
                                                 $resultid = $DB->insert_record('rcontent_grades_details', $instance);
+                                                if ($resultid !== false) {
+                                                    $instance->id = $resultid;
+                                                }
                                             } else {
                                                 $instance->id = $rcont_gradeid;
                                                 $resultid = $rcont_gradeid;
