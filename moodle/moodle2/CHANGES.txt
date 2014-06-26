@@ -1,3 +1,10 @@
+Changes in progress
+---------------------------------------------------------------------------------------
+
+ - Renewed version for 2.6
+ - Update code to avoid deprecation warnings and errors
+ - Code sorting and cleaning
+
 Version 2.0.6 (2014-06-05)
 ---------------------------------------------------------------------------------------
 
