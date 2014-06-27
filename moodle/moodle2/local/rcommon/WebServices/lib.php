@@ -184,3 +184,54 @@ function log_to_file($info, $tracer = 'rcontent_tracer') {
     }
 
 }
+
+
+function test_ws_url($url){
+    global $CFG;
+
+    try{
+        $curl=curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HEADER, false);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+
+        if ($CFG->proxytype == 'HTTP' && !empty($CFG->proxyhost)) {
+            curl_setopt($curl, CURLOPT_PROXY, $CFG->proxyhost);
+            if (!empty($CFG->proxyport)) {
+                curl_setopt($curl, CURLOPT_PROXYPORT, $CFG->proxyport);
+            }
+            if (!empty($CFG->proxyuser)) {
+                curl_setopt($curl, CURLOPT_PROXYUSERPWD, $CFG->proxyuser . ':' . $CFG->proxypassword);
+            }
+        }
+
+        $urlok = curl_exec($curl);
+        curl_close($curl);
+
+        if($urlok){
+            return $url;
+        }
+    } catch(Exception $e){
+        return false;
+    }
+    return false;
+}
+
+function rcommon_ws_error($function, $message){
+    global $USER, $DB;
+    try{
+        $record = new stdClass();
+        $record->time      =  time();
+        $record->userid    =  $USER->id;
+        $record->ip        =  $_SERVER['REMOTE_ADDR'];
+        $record->module    =  'rcommon';
+        $record->action    =  $function.'_error';
+        $record->url       =  $_SERVER['REQUEST_URI'];
+        $record->info      =  'Error '.$function.': '. $message;
+        $DB->insert_record("rcommon_errors_log", $record);
+    } catch(Exception $e){
+        return $message;
+    }
+    return $record->info;
+}
