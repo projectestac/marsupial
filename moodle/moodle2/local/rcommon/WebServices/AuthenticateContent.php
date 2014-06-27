@@ -86,8 +86,8 @@ function AuthenticateUserContent($data, $usr_creden = false, $showurl = true){
             $params->IdUsuario = new SoapVar($usr_creden->euserid, XSD_STRING, "string", "http://www.w3.org/2001/XMLSchema");
             //$params->NombreApe = new SoapVar($USER->firstname." ".$USER->lastname, XSD_STRING, "string", "http://www.w3.org/2001/XMLSchema");
 
-            //convert rcommon_studentroles to array
-            $rcommon_teacherroles = explode(',', $CFG->rcommon_teacherroles);
+            //convert rcommon_teacherroles to array
+            $rcommon_teacherroles = explode(',', get_config('rcommon','teacherroles'));
             //get user role
 
             // To avoid problems because in some cases the courseid was null
@@ -132,8 +132,6 @@ function AuthenticateUserContent($data, $usr_creden = false, $showurl = true){
             die();
         }
 
-
-
         //test the response to set parameters name to the standars
         foreach ($response->AutenticarUsuarioContenidoResult as $key => $value) {
         	switch(textlib::strtolower($key)) {
@@ -154,49 +152,23 @@ function AuthenticateUserContent($data, $usr_creden = false, $showurl = true){
 
         //check if there are any response error
         if ($response->AutenticarUsuarioContenidoResult->Codigo <= 0 ) {
-
             //test if isset the url
-            $urlok='';
+            //
+            $urlok =  false;
+            $message  =  "Instance ID: ".$data->id.", Text: ".get_string('wsautenticationerror',$data->module=='check_credentials'?'rcontent':$data->module).", Code: ".$response->AutenticarUsuarioContenidoResult->Codigo.", Detail: ".$response->AutenticarUsuarioContenidoResult->Descripcion;
             if (isset($response->AutenticarUsuarioContenidoResult->URL)) {
-				$curl=curl_init();
-				curl_setopt($curl, CURLOPT_URL, $response->AutenticarUsuarioContenidoResult->URL);
-		        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-		        curl_setopt($curl, CURLOPT_HEADER, false);
-		        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-
-		        if ($CFG->proxytype == 'HTTP' && !empty($CFG->proxyhost)){
-		        	curl_setopt($curl, CURLOPT_PROXY, $CFG->proxyhost);
-		        	if (!empty($CFG->proxyport)){
-		        		curl_setopt($curl, CURLOPT_PROXYPORT, $CFG->proxyport);
-		        	}
-		        	if (!empty($CFG->proxyuser)){
-		        		curl_setopt($curl, CURLOPT_PROXYUSERPWD, $CFG->proxyuser . ':' . $CFG->proxypassword);
-		        	}
-		        }
-		        $urlok = curl_exec($curl);
-		        curl_close($curl);
+                $urlok = ", URL: ".test_ws_url($response->AutenticarUsuarioContenidoResult->URL);
             }
 
-            //save error on bd
-            $tmp = new stdClass();
-            $tmp->time      =  time();
-            $tmp->userid    =  $USER->id;
-            $tmp->ip        =  $_SERVER['REMOTE_ADDR'];
-            $tmp->course    =  $data->course;
-            $tmp->module    =  $data->module;
-            $tmp->cmid      =  $data->cmid;
-            $tmp->action    =  'wsautenticationerror';
-            $tmp->url       =  $_SERVER['REQUEST_URI'];
-            $tmp->info      =  str_replace("'","''","Instance ID: ".$data->id.", Text: ".get_string('wsautenticationerror',$data->module=='check_credentials'?'rcontent':$data->module).", Code: ".$response->AutenticarUsuarioContenidoResult->Codigo.", Detail: ".$response->AutenticarUsuarioContenidoResult->Descripcion);
-            if ($urlok)
-                $tmp->info      =  $tmp->info.", URL: ".$response->AutenticarUsuarioContenidoResult->URL;
+            if($urlok){
+                $message  .= ", URL: ".$urlok;
+            }
 
-            $DB->insert_record('rcommon_errors_log',$tmp);
+            rcommon_ws_error('AuthenticateUserContent', $message, $data->module, $data->course, $data->cmid);
 
             $msg="";
 
-            if($urlok && $showurl)
-            {
+            if($urlok && $showurl) {
                 $msg='<br><br>'.@get_string('urlmoreinfo','local_rcommon',$response->AutenticarUsuarioContenidoResult->URL);
                 echo '<script type="text/javascript" language"javascript">window.open("'.$response->AutenticarUsuarioContenidoResult->URL.'","","fullscreen=yes,toolbar=yes,menubar=yes,scrollbars=yes,resizable=yes");</script>';
             } else {

@@ -161,22 +161,24 @@ function rcommon_xml2array($contents, $get_attributes=1) {
 }
 
 
-function log_to_file($info, $tracer = 'rcontent_tracer') {
+function log_to_file($info, $notused = null) {
     global $CFG;
 
-    if  (isset($CFG->$tracer) && $CFG->$tracer == 'checked' && isset($CFG->rcommon_data_store_log)) {
-    	$directorio_log = $CFG->rcommon_data_store_log."/1";
+    $data_store_log = get_config('rcommon','teacherroles');
+    $tracer = get_config('rcommon','tracer');
+    if  ($tracer == 'checked' && !empty($data_store_log)) {
+    	$data_store_log .= "/1";
 
     	//Escribimos en un fichero de texto los mensajes de errores
-    	if(!is_dir($directorio_log)) {
-    		mkdir($directorio_log);
+    	if(!is_dir($data_store_log)) {
+    		mkdir($data_store_log);
     	}
-    	$directorio_log .= "/log_rcommon";
-    	if(!is_dir($directorio_log)) {
-    		mkdir($directorio_log);
+    	$data_store_log .= "/log_rcommon";
+    	if(!is_dir($data_store_log)) {
+    		mkdir($data_store_log);
     	}
 
-        if ($handle = @fopen($directorio_log."/LogRcommon.log", "a")) {
+        if ($handle = @fopen($data_store_log."/LogRcommon.log", "a")) {
             $content = "\r\n".date("Y-m-d H:i:s")." - Data: ".$info;
             @fwrite($handle,$content);
             @fclose($handle);
@@ -218,14 +220,16 @@ function test_ws_url($url){
     return false;
 }
 
-function rcommon_ws_error($function, $message){
+function rcommon_ws_error($function, $message, $module = 'rcommon', $course = false, $cmid = false){
     global $USER, $DB;
     try{
         $record = new stdClass();
         $record->time      =  time();
         $record->userid    =  $USER->id;
         $record->ip        =  $_SERVER['REMOTE_ADDR'];
-        $record->module    =  'rcommon';
+        $record->module    =  $module;
+        if($course) $record->course    =  $course;
+        if($cmid) $record->cmid      =  $cmid;
         $record->action    =  $function.'_error';
         $record->url       =  $_SERVER['REQUEST_URI'];
         $record->info      =  'Error '.$function.': '. $message;
@@ -234,4 +238,13 @@ function rcommon_ws_error($function, $message){
         return $message;
     }
     return $record->info;
+}
+
+function rcommon_object_to_array_lower($object){
+    $array = (array) $object;
+    $array_ret = array();
+    foreach($array as $key => $value){
+        $array_ret[strtolower($key)] = $value;
+    }
+    return $array_ret;
 }

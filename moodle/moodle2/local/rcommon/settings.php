@@ -24,7 +24,7 @@ if ($hassiteconfig && (!isset($CFG->ismarsupial) || $CFG->ismarsupial)) {
 
 	$ADMIN->add('marsupialimport', new admin_externalpage('keymanager_import', get_string('keymanager_import','local_rcommon'), $CFG->wwwroot . '/local/rcommon/import.php', array('local/rcommon:importcredentials')));
 	$ADMIN->add('marsupialimport', new admin_externalpage('keymanager_export', get_string('keymanager_export','local_rcommon'), $CFG->wwwroot . '/local/rcommon/export.php', array('local/rcommon:exportcredentials')));
-    
+
 	if (has_capability('moodle/site:config', context_system::instance())) {
 		//****************** SETTINGS ******************//
 		$settings = new admin_settingpage('local_rcommon', get_string('rcommon','local_rcommon'));

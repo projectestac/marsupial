@@ -44,67 +44,45 @@ function get_books_structure_publisher($publisher, $isbn = false) {
     set_time_limit(0);
 
     try {
-        if ($ret = get_books($publisher)) {
-            if (isset($ret->ObtenerTodosResult->Codigo) == false) {
-            	$resp_libros = rcommon_xml2array($ret);
-                $keys = array('Envelope', 'Body', 'ObtenerTodosResponse', 'ObtenerTodosResult', 'Catalogo', 'libros', 'libro');
-                $arraylibros = rcommond_findarrayvalue($resp_libros, $keys);
+        $books = get_books($publisher);
+        if(!empty($books)){
+			//  Fix bug, when there is just one received book
+			if (!isset($books[0])) {
+				$books = array($books);
+			}
+            echo '<ol>';
+            foreach($books as $book) {
+                $book = rcommon_object_to_array_lower($book);
+                $cod_isbn = $book['isbn'];
 
-                if(!empty($arraylibros)){
-					// MARSUPIAL ************ AFEGIT -> Fix bug, when there is just one received book
-					// 2011.09.29 @mmartinez
-					if (!isset($arraylibros[0])) {
-						$arraylibros = array(0 => $arraylibros);
-					}
-					// *********** FI
-                    echo '<ol>';
-	                //foreach($resp_libros["soap:Envelope"]["soap:Body"]["ObtenerTodosResponse"]["ObtenerTodosResult"]["Catalogo"]["libros"]["libro"] as $li)
-	                foreach($arraylibros as $li) {
-	                    //$cod_isbn = $li["isbn"]["value"];
-	                    $cod_isbn = rcommond_findarrayvalue($li, array('isbn', 'value'));
+                // Si se ha especificado un isbn guarda el libro
+                if (!$isbn || $cod_isbn == $isbn) {
+                    echo '<li>ISBN: '.$cod_isbn.' -- ';
 
-	                    //si se ha especificado un isbn guarda el libro
-	                    if (!$isbn || $cod_isbn == $isbn) {
+                    //obtiene los datos del indice del libro
+                    try {
+                        $instance = new StdClass();
+                        $instance->isbn = $cod_isbn;
+                        $instance->name = $book['titulo'];
+                        $instance->summary = $book['titulo'];
+                        $instance->format = $book['formato'];
+                        $instance->levelid = $book['nivel'];
+                        $instance->publisherid = $publisher->id;
+                        rcommon_book::add_update($instance);
 
-	                        echo '<li>ISBN: '.$cod_isbn.' -- ';
+                        get_book_structure($publisher, $cod_isbn);
 
-	                        //obtiene los datos del indice del libro
-                            try {
-                                $instance = new StdClass();
-                                $instance->isbn = $cod_isbn;
-                                $instance->name = rcommond_findarrayvalue($li, array("titulo", "value"));
-                                $instance->summary = rcommond_findarrayvalue($li, array("titulo", "value"));
-                                $instance->format = str_replace("'", "''", rcommond_findarrayvalue($li, array("formato", "value")));
-                                $instance->levelid = rcommond_findarrayvalue($li, array("nivel", "value"));
-                                $instance->publisherid = $publisher->id;
-                                $bookid = rcommon_book::add_update($instance);
-
-                                get_book_structure($publisher, $cod_isbn);
-
-
-                            } catch( Exception $e){
-                                echo "KO! -- <span style='color: red;'>".$e->getMessage()."</span>";
-                            }
-                            echo '</li>';
-	                    }
-	                }
-                    echo '</ol>';
-	                return true;
-	              } else {
-	              	echo "<br><br>".get_string('nobooks','local_rcommon');
-	              	return true;
-	              }
-            } else {
-                //test if isset the url
-                $message  = 'Código: '.$ret->ObtenerTodosResult->Codigo.' - '.$ret->ObtenerTodosResult->Descripcion;
-                if (isset($response->ObtenerTodosResult->URL)) {
-                    $message .= ', URL: '.test_ws_url($response->ObtenerTodosResult->URL);
+                    } catch( Exception $e){
+                        echo "KO! -- <span style='color: red;'>".$e->getMessage()."</span>";
+                    }
+                    echo '</li>';
                 }
-                $message = rcommon_ws_error('get_books_structure_publisher', $message);
-
-                echo "<br>".$message."<br>";
-                return false;
             }
+            echo '</ol>';
+            return true;
+        } else {
+        	echo get_string('nobooks','local_rcommon');
+        	return true;
         }
     } catch(Exception $fault) {
         rcommon_ws_error('get_books_structure_publisher', $fault->getMessage());
@@ -137,20 +115,25 @@ function get_books($publisher) {
 
         //check if there are any response error
         if ($response->ObtenerTodosResult->Codigo <= 0) {
-            return $response;
-            //print_error('Error get_books: C&oacute;digo: '.$response->ObtenerTodosResult->Codigo.' - '.$response->ObtenerTodosResult->Descripcion);
+            $message  = 'Código: '.$response->ObtenerTodosResult->Codigo.' - '.$response->ObtenerTodosResult->Descripcion;
+            if (isset($response->ObtenerTodosResult->URL)) {
+                $message .= ', URL: '.test_ws_url($response->ObtenerTodosResult->URL);
+            }
+            $message = rcommon_ws_error('get_books', $message);
+
+            echo "<br>".$message."<br>";
         } else {
-            //return $response;
-            return $client->__getLastResponse();
+            if(isset($response->ObtenerTodosResult->Catalogo->libros->libro)){
+                return $response->ObtenerTodosResult->Catalogo->libros->libro;
+            }
         }
 
     } catch(Exception $fault) {
         $message = rcommon_ws_error('get_books', $fault->getMessage());
         echo $OUTPUT->notification("Error get_books: <br/>". $message);
         log_to_file("wsGetBooksStructure get_books() response error: ". $fault->getMessage(),'rcommon_tracer');
-        return false;
     }
-
+    return false;
 }
 
 
@@ -184,7 +167,7 @@ function get_book_structure($publisher, $isbn) {
     }
 
     if ($response && (!isset($response->ObtenerEstructuraResult->Codigo) || $response->ObtenerEstructuraResult->Codigo > 0)) {
-        save_book_structure($client->__getLastResponse(), $book);
+        save_book_structure($response, $book);
     } else {
         $message  = 'Código: '.$response->ObtenerEstructuraResult->Codigo.' - '.$response->ObtenerEstructuraResult->Descripcion;
         if (isset($response->ObtenerEstructuraResult->URL)) {
@@ -196,61 +179,49 @@ function get_book_structure($publisher, $isbn) {
 }
 
 function save_book_structure($response, $book){
-    //transforma xmlresponse a array
-    $resp_indice = rcommon_xml2array($response);
 
-    //selecciona el array de unidades
-    $keys = array("Envelope", "Body", "ObtenerEstructuraResponse", "ObtenerEstructuraResult", "Libros", "libro", "unidades", "unidad");
-    $unidades_xml = rcommond_findarrayvalue($resp_indice, $keys);
-
-    if ($unidades_xml && !array_key_exists('0', $unidades_xml)) {
-        $unidades_xml = array($unidades_xml);
-    }
-
+    $units = isset($response->ObtenerEstructuraResult->Libros->libro->unidades->unidad) ? $response->ObtenerEstructuraResult->Libros->libro->unidades->unidad : false;
     // Guarda los datos del libro
-    $book->structureforaccess = (count($unidades_xml) > 0)? 1 : 0;
+    $book->structureforaccess = (count($units) > 0)? 1 : 0;
     $bookid = rcommon_book::add_update($book);
 
-    //if exists units
-    if ($unidades_xml != false) {
-        //recorre las unidades
-        foreach($unidades_xml as $un) {
-            $unit_instance = new stdClass();
-            $unit_instance->bookid = $bookid;
+    if(!$units) return;
 
-            $unit_instance->code = rcommond_findarrayvalue($un, array("id", "value"));
-            // Check if $unit_instance->code is empty and search directly in the array
-            if (empty($unit_instance->code)) {
-                $unit_instance->code = (isset($un["id"]["value"]))? $un["id"]["value"]: '';
-            }
+    if (!isset($units[0])) {
+        $units = array($units);
+    }
 
-            $unit_instance->name = rcommond_findarrayvalue($un, array("titulo", "value"));
-            $unit_instance->summary = rcommond_findarrayvalue($un, array("titulo", "value"));
-            $unit_instance->sortorder = rcommond_findarrayvalue($un, array("orden", "value"));
+    foreach($units as $unit) {
+        $unit = rcommon_object_to_array_lower($unit);
 
-            //echo "<li>Unit: {$unit_instance->name}";
-            $unitid = rcommon_unit::add_update($unit_instance);
+        $unit_instance = new stdClass();
+        $unit_instance->bookid = $bookid;
+        $unit_instance->code = isset($unit['id']) ? $unit['id'] : "";
+        $unit_instance->name = isset($unit['titulo']) ? $unit['titulo'] : "";
+        $unit_instance->summary = $unit_instance->name;
+        $unit_instance->sortorder = isset($unit['orden']) ? $unit['orden'] : "";
 
-            $actividades = rcommond_findarrayvalue($un, array("actividades", "actividad"));
-            if ($actividades && !array_key_exists('0', $actividades)){
-                $actividades = array($actividades);
-            }
+        //echo "<li>Unit: {$unit_instance->name}";
+        $unitid = rcommon_unit::add_update($unit_instance);
+        $actividades = isset($unit->actividades->actividad) ? $unit->actividades->actividad : false;
+        if(!$actividades) return;
 
-            //if exists activities
-            if ($actividades != false) {
-                //guarda las actividades de la unidad
-                foreach($actividades as $act) {
+        if (!isset($actividades[0])) {
+            $actividades = array($actividades);
+        }
 
-                    $activity_instance = new stdClass();
-                    $activity_instance->bookid = $bookid;
-                    $activity_instance->unitid = $unitid;
-                    $activity_instance->code = rcommond_findarrayvalue($act, array("id", "value"));
-                    $activity_instance->name = rcommond_findarrayvalue($act, array("titulo", "value"));
-                    $activity_instance->summary = rcommond_findarrayvalue($act, array("titulo", "value"));
-                    $activity_instance->sortorder = rcommond_findarrayvalue($act, array("orden", "value"));
-                    $activid = rcommon_activity::add_update($activity_instance);
-                }
-            }
+        foreach($actividades as $act) {
+            $act = rcommon_object_to_array_lower($act);
+
+            $activity_instance = new stdClass();
+            $activity_instance->bookid = $bookid;
+            $activity_instance->unitid = $unitid;
+            $activity_instance->code = isset($unit['id']) ? $unit['id'] : "";
+            $activity_instance->name = isset($unit['titulo']) ? $unit['titulo'] : "";
+            $activity_instance->summary = $unit_instance->name;
+            $activity_instance->sortorder = isset($unit['orden']) ? $unit['orden'] : "";
+
+            $activid = rcommon_activity::add_update($activity_instance);
         }
     }
 }
