@@ -1,6 +1,6 @@
 <?php
 
-require_once($CFG->dirroot . '/local/rcommon/WebServices/lib.php');
+require_once($CFG->dirroot . '/local/rcommon/wslib.php');
 
 class TiposEstado {
     private static $types = array("NO_INICIADO" => "NO_INICIADO", "INCOMPLETO" => "INCOMPLETO", "FINALIZADO" => "FINALIZADO", "POR_CORREGIR" => "POR_CORREGIR", "CORREGIDO" => "CORREGIDO");
@@ -221,7 +221,7 @@ function valid_status_result($ResultExt) {
 }
 
 
-function get_ResultadoDetalleExtendido($ResultadoExtendido) {
+function get_ResultadoDetalleExtendido($ResultadoExtendido, $user, $passwd) {
     global $CFG, $USER, $DB;
     set_time_limit(0);
 
@@ -254,7 +254,7 @@ function get_ResultadoDetalleExtendido($ResultadoExtendido) {
         $cm = get_coursemodule_from_instance('rcontent', $rcontent->id, $rcontent->course);
         $contextmodule = context_module::instance($cm->id);
 
-        if (!UserAuthentication($ResultadoExtendido)) {
+        if (!UserAuthentication($book->id, $user, $passwd)) {
             return generate_error("Autenticacion", "", "ResultadoDetalleExtendido", $cm->id);
         }
 
@@ -598,41 +598,17 @@ function valid_activity($ResultExt, $book, $rcontent_activityid, $unidadid) {
     }
 }
 
-function UserAuthentication($ResultExt) {
+function UserAuthentication($bookid, $user, $passwd) {
     global $DB;
-    global $HTTP_RAW_POST_DATA;
 
-    try {
-        if (!isset($ResultExt->idContenidoLMS)) {
-            return false;
-        }
-
-        if (!$bookid = $DB->get_field('rcontent', 'bookid' ,array('id' => $ResultExt->idContenidoLMS))) {
-            return false;
-        }
-
-        if (!$publisherid = $DB->get_field('rcommon_books', 'publisherid', array('id' => $bookid))) {
-            return false;
-        }
-
-        log_to_file("wsSeguimiento request: " . $HTTP_RAW_POST_DATA);
-        $post = rcommon_xml2array($HTTP_RAW_POST_DATA);
-
-        $keys = array("Envelope", "Header", "WSEAuthenticateHeader", "User", "value");
-        $user_pub = rcommond_findarrayvalue($post, $keys);
-
-        $keys = array("Envelope", "Header", "WSEAuthenticateHeader", "Password", "value");
-        $pwr_pub = rcommond_findarrayvalue($post, $keys);
-
-        if (!$user_pub || !$pwr_pub) {
-            return false;
-        }
-
-        return $DB->record_exists('rcommon_publisher',array('id' => $publisherid, 'username' => $user_pub, 'password' => $pwr_pub));
-    } catch (Exception $e) {
-        log_to_file("wsSeguimiento: function UserAuthentication - Exception = " . $e->getMessage());
+    if (!$publisherid = $DB->get_field('rcommon_books', 'publisherid', array('id' => $bookid))) {
         return false;
     }
+    if (!$user || !$passwd) {
+        return false;
+    }
+
+    return $DB->record_exists('rcommon_publisher',array('id' => $publisherid, 'username' => $user, 'password' => $passwd));
 }
 
 function get_unit_from_code($ResultadoExtendido, $bookid){
@@ -738,30 +714,11 @@ function get_real_rcontent($ResultadoExtendido, $rcontent_original, $bookid){
  * @return ResultadoDetalleExtendidoResponse                Error generated
  */
 function generate_error($indexError, $extradescr, $functionError, $cmid = 0) {
-    global $DB, $USER, $COURSE;
-
     $ret_error = new ResultadoDetalleExtendidoResponse();
     list($codError, $descError) = $ret_error->setError($indexError, $extradescr);
 
-    try {
-        // Save error on bd
-        $record = new stdClass();
-        $record->time = time();
-        $record->userid = $USER->id;
-        $record->ip = $_SERVER['REMOTE_ADDR'];
-        $record->course    =  isset($COURSE->id) && $COURSE->id != SITEID ? $COURSE->id : null;
-        $record->module = 'rcontent';
-        $record->cmid      =  $cmid ? $cmid : 0;
-        $record->action = $functionError . "_error";
-        $record->url = $_SERVER['REQUEST_URI'];
-
-        $record->info = addslashes('Error ' . $functionError . ': ' . get_string('code', 'rcontent') . ': ' . $codError . ' - ' . $descError);
-        $DB->insert_record("rcommon_errors_log", $record);
-
-        log_to_file("wsSeguimiento failed: " . $record->info);
-    } catch (Exception $e) {
-        log_to_file("wsSeguimiento: function generate_error - Exception = " . $e->getMessage());
-    }
+    $message = get_string('code', 'rcontent') . ': ' . $codError . ' - ' . $descError;
+    $info = rcommon_ws_error($functionError, $message, 'rcontent', $cmid);
 
     return $ret_error;
 }

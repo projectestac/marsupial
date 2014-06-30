@@ -2,12 +2,31 @@
 
 require_once('../../../config.php');
 require_once('wsSeguimiento.lib.php');
+require_once($CFG->dirroot . '/local/rcommon/wslib.php');
 
-function ResultadoDetalleExtendido($Resultado) {
-    log_to_file("wsSeguimiento request: " . serialize($Resultado));
-    $ret = get_ResultadoDetalleExtendido($Resultado->ResultadoExtendido);
-    log_to_file("wsSeguimiento response: " . serialize($ret));
-    return $ret;
+class wsSeguimiento{
+
+    private $user = false;
+    private $password = false;
+
+    function WSEAuthenticateHeader($header){
+        log_to_file("wsSeguimiento header: " . serialize($header));
+        $header = rcommon_object_to_array_lower($header);
+        $this->user = isset($header['user']) ? $header['user'] : false;
+        $this->password = isset($header['password']) ? $header['password'] : false;
+    }
+
+    function ResultadoDetalleExtendido($Resultado) {
+        if (!$this->user || !$this->password) {
+            $ret = generate_error("Autenticacion", "", "ResultadoDetalleExtendido");
+        } else {
+            log_to_file("wsSeguimiento request: " . serialize($Resultado));
+            $ret = get_ResultadoDetalleExtendido($Resultado->ResultadoExtendido, $this->user, $this->password);
+        }
+
+        log_to_file("wsSeguimiento response: " . serialize($ret));
+        return $ret;
+    }
 }
 
 function generate_wsdl() {
@@ -53,6 +72,7 @@ if (isset($_REQUEST['wsdl']) || isset($_REQUEST['WSDL'])) {
     //$server = new SoapServer("$CFG->wwwroot/mod/rcontent/WebServices/wsSeguimiento_wsdl.php");
     $server = new SoapServer("$CFG->dataroot/1/WebServices/WsSeguimiento/wsSeguimiento.wsdl");
 
+    $server->setClass("wsSeguimiento");
     $server->addFunction("ResultadoDetalleExtendido");
 
     $HTTP_RAW_POST_DATA = isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : '';

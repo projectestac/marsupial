@@ -1,8 +1,9 @@
 <?php
 require_once('../../../config.php');
 require_once($CFG->dirroot . '/mod/rcontent/WebServices/wsSeguimiento.lib.php');
+require_once($CFG->dirroot . '/local/rcommon/wslib.php');
 
-require_xtecadmin();
+//require_xtecadmin();
 
 $ws = optional_param('ws', false, PARAM_BOOL);
 $User = optional_param('User', false, PARAM_TEXT);
@@ -110,7 +111,6 @@ Descripcion<input name="dDescripcion" value="<?php echo $params->Detalles->Descr
 </form>
 <?php
 if($params->idUsuario && $params->idContenidoLMS && $params->idCentro){
-	require_once($CFG->dirroot . '/local/rcommon/WebServices/lib.php');
 	$params_arr = (array) $params->Resultado;
 	foreach($params_arr as $key => $param){
 		if($param === false || $param === ""){
@@ -141,9 +141,8 @@ if($params->idUsuario && $params->idContenidoLMS && $params->idCentro){
 			$options = array('connection_timeout' => 120);
 		    $options['trace'] = 1;
 			$client = @new soapclient($wsdl.'?wsdl', $options);
-
 			$auth = array('User' => $User, 'Password' => $Password);
-		    $namespace = rcommond_wdsl_parser($wsdl.'?wsdl');
+		    $namespace = rcommond_get_wsdl_namespace($wsdl.'?wsdl');
 		    $header = new SoapHeader($namespace, "WSEAuthenticateHeader", $auth);
 		    $client->__setSoapHeaders(array($header));
 

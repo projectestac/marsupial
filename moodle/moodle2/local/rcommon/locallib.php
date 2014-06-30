@@ -1,58 +1,5 @@
 <?php
 
-function get_marsupial_ws_client($publisher, $auth_content = false){
-    $wsdl = $auth_content ? $publisher->urlwsauthentication : $publisher->urlwsbookstructure;
-
-    $options = get_marsupial_soap_options();
-    $client = @new soapclient($wsdl.'?wsdl', $options);
-
-    $auth = array('User' => $publisher->username, 'Password' => $publisher->password);
-
-    $namespace = rcommond_wdsl_parser($wsdl.'?wsdl');
-
-    $header = new SoapHeader($namespace, "WSEAuthenticateHeader", $auth);
-    $client->__setSoapHeaders(array($header));
-
-    return $client;
-}
-
-function get_marsupial_soap_options($debug = true, $timeout = 120){
-    global $CFG;
-
-    $options = array('connection_timeout' => $timeout);
-
-    if($debug){
-        $options['trace'] = 1;
-    }
-    if (isset($CFG->proxytype) && $CFG->proxytype == 'HTTP' && isset($CFG->proxyhost) && !empty($CFG->proxyhost)){
-        $options['proxy_host'] = $CFG->proxyhost;
-        if (!empty($CFG->proxyport)){
-            $options['proxy_port'] = $CFG->proxyport;
-        }
-        if (!empty($CFG->proxyuser)){
-            $options['proxy_login'] = $CFG->proxyuser;
-        }
-        if (!empty($CFG->proxypassword)){
-            $options['proxy_password'] = $CFG->proxypassword;
-        }
-    }
-    return $options;
-}
-
-function get_marsupial_center($error = true){
-    global $CFG;
-    if (isset($CFG->center) && !empty($CFG->center)) {
-        return $CFG->center;
-    } else {
-        if($error){
-            print_error(get_string("centernotfound", "local_rcommon"));
-        } else {
-            return false;
-        }
-    }
-}
-
-
 class rcommon_level{
 
     static function get_create_by_code($code){

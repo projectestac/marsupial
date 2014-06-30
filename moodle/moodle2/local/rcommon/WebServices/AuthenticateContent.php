@@ -1,6 +1,6 @@
 <?php
 
-require_once($CFG->dirroot.'/local/rcommon/WebServices/lib.php');
+require_once($CFG->dirroot.'/local/rcommon/wslib.php');
 require_once($CFG->dirroot.'/local/rcommon/locallib.php');
 
 /**
@@ -147,8 +147,8 @@ function AuthenticateUserContent($data, $usr_creden = false, $showurl = true){
         	}
         }
 
-        log_to_file("wsAutenthication request: ".$client->__getLastRequest(),'rcommon_tracer');
-        log_to_file("wsAutenthication response: ".$client->__getLastResponse(),'rcommon_tracer');
+        log_to_file("wsAutenthication request: ".$client->__getLastRequest());
+        log_to_file("wsAutenthication response: ".$client->__getLastResponse());
 
         //check if there are any response error
         if ($response->AutenticarUsuarioContenidoResult->Codigo <= 0 ) {
@@ -164,7 +164,7 @@ function AuthenticateUserContent($data, $usr_creden = false, $showurl = true){
                 $message  .= ", URL: ".$urlok;
             }
 
-            rcommon_ws_error('AuthenticateUserContent', $message, $data->module, $data->course, $data->cmid);
+            rcommon_ws_error('AuthenticateUserContent', $message, $data->module, $data->cmid, $data->course);
 
             $msg="";
 

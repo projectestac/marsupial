@@ -1,6 +1,6 @@
 <?php
 require_once($CFG->dirroot."/config.php");
-require_once($CFG->dirroot.'/local/rcommon/WebServices/lib.php');
+require_once($CFG->dirroot.'/local/rcommon/wslib.php');
 require_once($CFG->dirroot.'/local/rcommon/locallib.php');
 
 function get_all_books_structure($publisherid = false, $isbn = false) {
@@ -110,8 +110,8 @@ function get_books($publisher) {
 
         $response = $client->__soapCall("ObtenerTodos", array($params));
 
-        log_to_file("get_books Request: ".$client->__getLastRequest(),'rcommon_tracer');
-        log_to_file("get_books Response: ".$client->__getLastResponse(),'rcommon_tracer');
+        log_to_file("get_books Request: ".$client->__getLastRequest());
+        log_to_file("get_books Response: ".$client->__getLastResponse());
 
         //check if there are any response error
         if ($response->ObtenerTodosResult->Codigo <= 0) {
@@ -131,7 +131,6 @@ function get_books($publisher) {
     } catch(Exception $fault) {
         $message = rcommon_ws_error('get_books', $fault->getMessage());
         echo $OUTPUT->notification("Error get_books: <br/>". $message);
-        log_to_file("wsGetBooksStructure get_books() response error: ". $fault->getMessage(),'rcommon_tracer');
     }
     return false;
 }
@@ -158,10 +157,10 @@ function get_book_structure($publisher, $isbn) {
         $params->ISBN = @new SoapVar($isbn, XSD_STRING, "string", "http://www.w3.org/2001/XMLSchema");
         $response = $client->__soapCall("ObtenerEstructura", array($params));
 
-        //log_to_file("wsget_books_structure Request: ".$client->__getLastRequest(),'rcommon_tracer');
-        //log_to_file("wsget_books_structure Response: ".$client->__getLastResponse(),'rcommon_tracer');
+        //log_to_file("wsget_books_structure Request: ".$client->__getLastRequest());
+        //log_to_file("wsget_books_structure Response: ".$client->__getLastResponse());
     } catch(Exception $fault) {
-        log_to_file("wsBookStructure: get_book_structure - Exception = ".$fault->getMessage(),'rcommon_tracer');
+        log_to_file("wsBookStructure: get_book_structure - Exception = ".$fault->getMessage());
         rcommon_ws_error('get_book_structure', $fault->getMessage());
         throw new Exception($fault->getMessage());
     }
@@ -192,6 +191,8 @@ function save_book_structure($response, $book){
     }
 
     foreach($units as $unit) {
+        $actividades = isset($unit->actividades->actividad) ? $unit->actividades->actividad : false;
+
         $unit = rcommon_object_to_array_lower($unit);
 
         $unit_instance = new stdClass();
@@ -203,7 +204,7 @@ function save_book_structure($response, $book){
 
         //echo "<li>Unit: {$unit_instance->name}";
         $unitid = rcommon_unit::add_update($unit_instance);
-        $actividades = isset($unit->actividades->actividad) ? $unit->actividades->actividad : false;
+
         if(!$actividades) return;
 
         if (!isset($actividades[0])) {

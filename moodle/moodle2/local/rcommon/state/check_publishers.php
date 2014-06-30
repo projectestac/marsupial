@@ -8,7 +8,7 @@ header('Expires: Mon,26 Jul 1997 05:00:00 GMT');
 echo '<?xml version="1.0" encoding="UTF-8"?>';
 
 
-$publisher_books = $DB->get_records_sql ('SELECT pub.name, pub.id, pub.username, pub.password, pub.urlwsbookstructure AS url FROM {rcommon_publisher} pub ORDER BY pub.name');
+$publisher_books = $DB->get_records('rcommon_publisher');
 
 $soap_options = array(
     'trace' => 1,
@@ -35,13 +35,7 @@ foreach ($publisher_books as $publisher){
     $success = false;
     $fail_description = "";
     try {
-        $client = new SoapClient($publisher->url.'?wsdl', $soap_options);
-        $namespace = rcommond_wdsl_parser($publisher->url.'?wsdl');
-
-        $auth = array('User' => $publisher->username, 'Password' => $publisher->password);
-        $header = new SoapHeader($namespace, "WSEAuthenticateHeader", $auth);
-        $client->__setSoapHeaders(array($header));
-
+        $client = get_marsupial_ws_client($publisher);
         $params = new stdClass();
         $params->IdCentro = @new SoapVar($CFG->center, XSD_STRING, "string", "http://www.w3.org/2001/XMLSchema");
         $response = $client->__soapCall("ObtenerTodos", array($params));
@@ -62,7 +56,6 @@ foreach ($publisher_books as $publisher){
     } else {
         echo '<publisher id="'.$publisher->id.'" state="0">';
         echo get_string('bad_connection', 'local_rcommon').': '.$fail_description;
-
     }
     echo '</publisher>';
 }
