@@ -3,7 +3,7 @@ require_once('../../../config.php');
 require_once($CFG->dirroot . '/mod/rcontent/WebServices/wsSeguimiento.lib.php');
 require_once($CFG->dirroot . '/local/rcommon/wslib.php');
 
-//require_xtecadmin();
+require_xtecadmin();
 
 $ws = optional_param('ws', false, PARAM_BOOL);
 $User = optional_param('User', false, PARAM_TEXT);
