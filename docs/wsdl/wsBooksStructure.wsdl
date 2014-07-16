@@ -1,199 +1,200 @@
-<?xml version="1.0" encoding="UTF-8"?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI"s version is JAX-WS RI 2.1.7-b01-. --><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://educacio.gencat.cat/agora/estructuralibros/" targetNamespace="http://educacio.gencat.cat/agora/estructuralibros/"> 
-			  <wsdl:types>
-			    <xs:schema elementFormDefault="qualified" targetNamespace="http://educacio.gencat.cat/agora/estructuralibros/">
-			      <xs:complexType name="Actividad">
-			        <xs:sequence>
-			          <xs:element minOccurs="1" maxOccurs="1" name="id" type="xs:string" />
-			          <xs:element minOccurs="1" maxOccurs="1" name="titulo" type="xs:string" />
-			          <xs:element minOccurs="1" maxOccurs="1" name="orden" type="xs:int" />
-			        </xs:sequence>
-			      </xs:complexType>
-			      <xs:complexType name="Actividades">
-			        <xs:sequence>
-			          <xs:element minOccurs="1" maxOccurs="unbounded" name="actividad" type="tns:Actividad" />
-			        </xs:sequence>
-			      </xs:complexType>
-			      <xs:complexType name="Unidad">
-			        <xs:sequence>
-			          <xs:element minOccurs="1" maxOccurs="1" name="id" type="xs:string" />
-			          <xs:element minOccurs="1" maxOccurs="1" name="titulo" type="xs:string" />
-			          <xs:element minOccurs="1" maxOccurs="1" name="orden" type="xs:int" />
-			          <xs:element minOccurs="0" maxOccurs="1" name="actividades" type="tns:Actividades" />
-			        </xs:sequence>
-			      </xs:complexType>
-			      <xs:complexType name="Unidades">
-			        <xs:sequence>
-			          <xs:element minOccurs="1" maxOccurs="unbounded" name="unidad" type="tns:Unidad" />
-			        </xs:sequence>
-			      </xs:complexType>
-			      <xs:complexType name="libro">
-			        <xs:sequence>
-			          <xs:element minOccurs="1" maxOccurs="1" name="ISBN" type="xs:string" />
-			          <xs:element minOccurs="1" maxOccurs="1" name="titulo" type="xs:string" />
-			          <xs:element minOccurs="1" maxOccurs="1" name="nivel" type="xs:string" />
-			          <xs:element minOccurs="1" maxOccurs="1" name="formato" type="xs:string" />
-			          <xs:element minOccurs="0" maxOccurs="1" name="unidades" type="tns:Unidades" />
-			        </xs:sequence>
-			      </xs:complexType>
-			      <xs:complexType name="libros">
-			        <xs:sequence>
-			          <xs:element minOccurs="1" maxOccurs="unbounded" name="libro" type="tns:libro" />
-			        </xs:sequence>
-			      </xs:complexType>
-			      <xs:element name="WSEAuthenticateHeader" type="tns:WSEAuthenticateHeader" />
-			      <xs:complexType name="WSEAuthenticateHeader">
-			        <xs:sequence>
-			          <xs:element minOccurs="0" maxOccurs="1" name="User" type="xs:string" />
-			          <xs:element minOccurs="0" maxOccurs="1" name="Password" type="xs:string" />
-			        </xs:sequence>
-			        <xs:anyAttribute />
-			      </xs:complexType>
-			      <xs:element name="ObtenerEstructura">
-			        <xs:complexType>
-			          <xs:sequence>
-			            <xs:element minOccurs="1" maxOccurs="1" name="ISBN" type="xs:string" />
-			          </xs:sequence>
-			        </xs:complexType>
-			      </xs:element>
-			      <xs:element name="ObtenerEstructuraResponse">
-			        <xs:complexType>
-			          <xs:sequence>
-			            <xs:element minOccurs="0" maxOccurs="1" name="ObtenerEstructuraResult" type="tns:EstructuraLibro" />
-			          </xs:sequence>
-			        </xs:complexType>
-			      </xs:element>
-			      <xs:complexType name="EstructuraLibro">
-			        <xs:sequence>
-			          <xs:element minOccurs="0" maxOccurs="1" name="Libros" type="tns:libros" />
-			          <xs:element minOccurs="1" maxOccurs="1" name="Codigo" type="xs:string" />
-			          <xs:element minOccurs="1" maxOccurs="1" name="Descripcion" type="xs:string" />
-			        </xs:sequence>
-			      </xs:complexType>
-			      <xs:element name="ObtenerTodos">
-			        <xs:complexType>
-			          <xs:sequence>
-			            <xs:element minOccurs="0" maxOccurs="1" name="IdCentro" type="xs:string" />
-			          </xs:sequence>
-			        </xs:complexType>
-			      </xs:element>
-			      <xs:element name="ObtenerTodosResponse">
-			        <xs:complexType>
-			          <xs:sequence>
-			            <xs:element minOccurs="0" maxOccurs="1" name="ObtenerTodosResult" type="tns:EstructuraCatalogo" />
-			          </xs:sequence>
-			        </xs:complexType>
-			      </xs:element>
-			      <xs:complexType name="EstructuraCatalogo">
-			        <xs:sequence>
-			          <xs:element minOccurs="0" maxOccurs="1" name="Catalogo">
-			            <xs:complexType>
-			              <xs:sequence>
-			                <xs:element minOccurs="1" maxOccurs="1" name="libros" type="tns:libros" />
-			              </xs:sequence>
-			            </xs:complexType>
-			          </xs:element>
-			          <xs:element minOccurs="1" maxOccurs="1" name="Codigo" type="xs:string" />
-			          <xs:element minOccurs="1" maxOccurs="1" name="Descripcion" type="xs:string" />
-			        </xs:sequence>
-			      </xs:complexType>
-			      <xs:complexType name="DetallesError">
-			        <xs:annotation>
-			          <xs:documentation>Detalles del motivo del error producido en el tratamiento del servicio web realizado</xs:documentation>
-			        </xs:annotation>
-			        <xs:sequence>
-			          <xs:element name="Codigo" type="xs:int">
-			            <xs:annotation>
-			              <xs:documentation>Código del error</xs:documentation>
-			            </xs:annotation>
-			          </xs:element>
-			          <xs:element name="Descripcion" type="xs:string">
-			            <xs:annotation>
-			              <xs:documentation>Descripción detallada del error</xs:documentation>
-			            </xs:annotation>
-			          </xs:element>
-			          <xs:element name="Observaciones" minOccurs="0">
-			            <xs:annotation>
-			              <xs:documentation>Observaciones/descripción ampliada del error</xs:documentation>
-			            </xs:annotation>
-			          </xs:element>
-			        </xs:sequence>
-			      </xs:complexType>
-			    </xs:schema>
-			  </wsdl:types>
-			  <wsdl:message name="ObtenerEstructuraRequest">
-			    <wsdl:part name="parameters" element="tns:ObtenerEstructura" />
-			  </wsdl:message>
-			  <wsdl:message name="ObtenerEstructuraResponse">
-			    <wsdl:part name="parameters" element="tns:ObtenerEstructuraResponse" />
-			  </wsdl:message>
-			  <wsdl:message name="ObtenerEstructuraWSEAuthenticateHeader">
-			    <wsdl:part name="WSEAuthenticateHeader" element="tns:WSEAuthenticateHeader" />
-			  </wsdl:message>
-			  <wsdl:message name="ObtenerTodosRequest">
-			    <wsdl:part name="parameters" element="tns:ObtenerTodos" />
-			  </wsdl:message>
-			  <wsdl:message name="ObtenerTodosResponse">
-			    <wsdl:part name="parameters" element="tns:ObtenerTodosResponse" />
-			  </wsdl:message>
-			  <wsdl:message name="ObtenerTodosWSEAuthenticateHeader">
-			    <wsdl:part name="WSEAuthenticateHeader" element="tns:WSEAuthenticateHeader" />
-			  </wsdl:message>
-			  <wsdl:portType name="EstructuraLibrosPort">
-			    <wsdl:operation name="ObtenerEstructura">
-			      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
-			        Retorna el indice de contenidos de un libro de nuestro catálogo.&lt;br />&lt;br />
-			        Parámetros: &lt;br />
-			         - ISBN = Código ISBN del producto digital&lt;br />&lt;br />
-			        Retorna: &lt;br />
-			         * Código (string) / Descripción (string) / Libros (XML) &lt;br />
-			         - (1): Proceso correcto. &lt;br />
-			         - (0): Error inesperado. &lt;br />
-			         - (-3): El ISBN del producto no es válido. &lt;br />
-			         - (-101): Autenticación incorrecta. El usuario que solicita acceso a este método del servicio Web no es correcto. &lt;br />
-			         - (-102): Autenticación incorrecta. El usuario que solicita acceso a este método del servicio Web no tiene permisos suficientes.&lt;br />&lt;br /></wsdl:documentation>
-			      <wsdl:input message="tns:ObtenerEstructuraRequest" />
-			      <wsdl:output message="tns:ObtenerEstructuraResponse" />
-			    </wsdl:operation>
-			    <wsdl:operation name="ObtenerTodos">
-			      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
-			        Retorna todos los indices de los libros que se están dados de alta como libros &lt;br />
-			        accesibles para el usuario autenticado.&lt;br />&lt;br />
-			        Retorna: &lt;br />
-			         * Código (string) / Descripción (string) / Libros (XML) &lt;br />
-			         - (1): Proceso correcto&lt;br />
-			         - (0): Error inesperado&lt;br />
-			         - (-101): Autenticación incorrecta. El usuario que solicita acceso a este método del servicio Web no es correcto. &lt;br />
-			         - (-102): Autenticación incorrecta. El usuario que solicita acceso a este método del servicio Web no tiene permisos suficientes.&lt;br />&lt;br /></wsdl:documentation>
-			      <wsdl:input message="tns:ObtenerTodosRequest" />
-			      <wsdl:output message="tns:ObtenerTodosResponse" />
-			    </wsdl:operation>
-			  </wsdl:portType>
-			  <wsdl:binding name="EstructuraLibrosBinding" type="tns:EstructuraLibrosPort">
-			    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
-			    <wsdl:operation name="ObtenerEstructura">
-			      <soap:operation soapAction="ObtenerEstructura" style="document" />
-			      <wsdl:input>
-			        <soap:body use="literal" />
-			        <soap:header message="tns:ObtenerEstructuraWSEAuthenticateHeader" part="WSEAuthenticateHeader" use="literal" />
-			      </wsdl:input>
-			      <wsdl:output>
-			        <soap:body use="literal" />
-			      </wsdl:output>
-			    </wsdl:operation>
-			    <wsdl:operation name="ObtenerTodos">
-			      <soap:operation soapAction="ObtenerTodos" style="document" />
-			      <wsdl:input>
-			        <soap:body use="literal" />
-			        <soap:header message="tns:ObtenerTodosWSEAuthenticateHeader" part="WSEAuthenticateHeader" use="literal" />
-			      </wsdl:input>
-			      <wsdl:output>
-			        <soap:body use="literal" />
-			      </wsdl:output>
-			    </wsdl:operation>
-			  </wsdl:binding>
-			  <wsdl:service name="EstructuraLibrosService">
-			    <wsdl:port name="EstructuraLibrosPort" binding="tns:EstructuraLibrosBinding">
-			      <soap:address location="http://educacio.gencat.cat/agora/estructuralibros" />
-			    </wsdl:port>
-			  </wsdl:service>
-			</wsdl:definitions>
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://educacio.gencat.cat/agora/estructuralibros/" targetNamespace="http://educacio.gencat.cat/agora/estructuralibros/"> 
+  <wsdl:types>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://educacio.gencat.cat/agora/estructuralibros/">
+      <xs:complexType name="Actividad">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="id" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="titulo" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="orden" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Actividades">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="unbounded" name="actividad" type="tns:Actividad" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Unidad">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="id" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="titulo" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="orden" type="xs:int" />
+          <xs:element minOccurs="0" maxOccurs="1" name="actividades" type="tns:Actividades" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Unidades">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="unbounded" name="unidad" type="tns:Unidad" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="libro">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="ISBN" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="titulo" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="nivel" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="formato" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="unidades" type="tns:Unidades" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="libros">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="unbounded" name="libro" type="tns:libro" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="WSEAuthenticateHeader" type="tns:WSEAuthenticateHeader" />
+      <xs:complexType name="WSEAuthenticateHeader">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="User" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Password" type="xs:string" />
+        </xs:sequence>
+        <xs:anyAttribute />
+      </xs:complexType>
+      <xs:element name="ObtenerEstructura">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="ISBN" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ObtenerEstructuraResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="ObtenerEstructuraResult" type="tns:EstructuraLibro" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:complexType name="EstructuraLibro">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="Libros" type="tns:libros" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Codigo" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Descripcion" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="ObtenerTodos">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="IdCentro" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ObtenerTodosResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="ObtenerTodosResult" type="tns:EstructuraCatalogo" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:complexType name="EstructuraCatalogo">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="Catalogo">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="1" maxOccurs="1" name="libros" type="tns:libros" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="1" maxOccurs="1" name="Codigo" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Descripcion" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DetallesError">
+        <xs:annotation>
+          <xs:documentation>Detalles del motivo del error producido en el tratamiento del servicio web realizado</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element name="Codigo" type="xs:int">
+            <xs:annotation>
+              <xs:documentation>Código del error</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Descripcion" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Descripción detallada del error</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Observaciones" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Observaciones/descripción ampliada del error</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="ObtenerEstructuraRequest">
+    <wsdl:part name="parameters" element="tns:ObtenerEstructura" />
+  </wsdl:message>
+  <wsdl:message name="ObtenerEstructuraResponse">
+    <wsdl:part name="parameters" element="tns:ObtenerEstructuraResponse" />
+  </wsdl:message>
+  <wsdl:message name="ObtenerEstructuraWSEAuthenticateHeader">
+    <wsdl:part name="WSEAuthenticateHeader" element="tns:WSEAuthenticateHeader" />
+  </wsdl:message>
+  <wsdl:message name="ObtenerTodosRequest">
+    <wsdl:part name="parameters" element="tns:ObtenerTodos" />
+  </wsdl:message>
+  <wsdl:message name="ObtenerTodosResponse">
+    <wsdl:part name="parameters" element="tns:ObtenerTodosResponse" />
+  </wsdl:message>
+  <wsdl:message name="ObtenerTodosWSEAuthenticateHeader">
+    <wsdl:part name="WSEAuthenticateHeader" element="tns:WSEAuthenticateHeader" />
+  </wsdl:message>
+  <wsdl:portType name="EstructuraLibrosPort">
+    <wsdl:operation name="ObtenerEstructura">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+        Retorna el indice de contenidos de un libro de nuestro catálogo.&lt;br/&gt;&lt;br/&gt;
+        Parámetros: &lt;br/&gt;
+         - ISBN = Código ISBN del producto digital&lt;br/&gt;&lt;br/&gt;
+        Retorna: &lt;br/&gt;
+         * Código (string) / Descripción (string) / Libros (XML) &lt;br/&gt;
+         - (1): Proceso correcto. &lt;br/&gt;
+         - (0): Error inesperado. &lt;br/&gt;
+         - (-3): El ISBN del producto no es válido. &lt;br/&gt;
+         - (-101): Autenticación incorrecta. El usuario que solicita acceso a este método del servicio Web no es correcto. &lt;br/&gt;
+         - (-102): Autenticación incorrecta. El usuario que solicita acceso a este método del servicio Web no tiene permisos suficientes.&lt;br/&gt;&lt;br/&gt;</wsdl:documentation>
+      <wsdl:input message="tns:ObtenerEstructuraRequest" />
+      <wsdl:output message="tns:ObtenerEstructuraResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="ObtenerTodos">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+        Retorna todos los indices de los libros que se están dados de alta como libros &lt;br/&gt;
+        accesibles para el usuario autenticado.&lt;br/&gt;&lt;br/&gt;
+        Retorna: &lt;br/&gt;
+         * Código (string) / Descripción (string) / Libros (XML) &lt;br/&gt;
+         - (1): Proceso correcto&lt;br/&gt;
+         - (0): Error inesperado&lt;br/&gt;
+         - (-101): Autenticación incorrecta. El usuario que solicita acceso a este método del servicio Web no es correcto. &lt;br/&gt;
+         - (-102): Autenticación incorrecta. El usuario que solicita acceso a este método del servicio Web no tiene permisos suficientes.&lt;br/&gt;&lt;br/&gt;</wsdl:documentation>
+      <wsdl:input message="tns:ObtenerTodosRequest" />
+      <wsdl:output message="tns:ObtenerTodosResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="EstructuraLibrosBinding" type="tns:EstructuraLibrosPort">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="ObtenerEstructura">
+      <soap:operation soapAction="ObtenerEstructura" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:ObtenerEstructuraWSEAuthenticateHeader" part="WSEAuthenticateHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ObtenerTodos">
+      <soap:operation soapAction="ObtenerTodos" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:ObtenerTodosWSEAuthenticateHeader" part="WSEAuthenticateHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="EstructuraLibrosService">
+    <wsdl:port name="EstructuraLibrosPort" binding="tns:EstructuraLibrosBinding">
+      <soap:address location="http://educacio.gencat.cat/agora/estructuralibros" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

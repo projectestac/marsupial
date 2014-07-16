@@ -1,59 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
-			<definitions xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://educacio.gencat.cat/proveedores/autenticacion/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://educacio.gencat.cat/proveedores/autenticacion/">
-			<types>
-			<xsd:schema targetNamespace="http://educacio.gencat.cat/proveedores/autenticacion/">
-			 <xsd:import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
-			 <xsd:import namespace="http://schemas.xmlsoap.org/wsdl/" />
-			 <xsd:element name="WSEAuthenticateHeader" type="tns:WSEAuthenticateHeader" />
-			   <xsd:complexType name="WSEAuthenticateHeader">
-			   <xsd:sequence>
-				 <xsd:element minOccurs="0" maxOccurs="1" name="User" type="xsd:string" />
-				 <xsd:element minOccurs="0" maxOccurs="1" name="Password" type="xsd:string" />
-			   </xsd:sequence>
-			   <xsd:anyAttribute />
-			 </xsd:complexType>
-			 <xsd:complexType name="AutenticarUsuarioContenido">
-			  <xsd:all>
-			   <xsd:element name="Credencial" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-			   <xsd:element name="ISBN" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-			   <xsd:element name="IdUsuario" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-			   <xsd:element name="NombreApe" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-			   <xsd:element name="IdGrupo" type="xsd:string" minOccurs="0" maxOccurs="1"/><xsd:element name="Rol" type="tns:TipoRol" default="ESTUDIANTE" minOccurs="0" maxOccurs="1"/><xsd:element name="IdCurso" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-			   <xsd:element name="IdCentro" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-			   <xsd:element name="URLResultado" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-			   <xsd:element name="IdContenidoLMS" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-			   <xsd:element name="IdUnidad" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-			   <xsd:element name="IdActividad" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-			  </xsd:all>
-			 </xsd:complexType><xsd:simpleType name="TipoRol">
-                 <xsd:restriction base="xsd:string">
-                     <xsd:enumeration value="ESTUDIANTE"/>
-                     <xsd:enumeration value="PROFESOR"/>
-                 </xsd:restriction>
-             </xsd:simpleType><xsd:complexType name="Licencia">
-			  <xsd:all>
-			   <xsd:element name="Codigo" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-			   <xsd:element name="Descripcion" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-			   <xsd:element name="URL" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-			  </xsd:all>
-			 </xsd:complexType>
-			 <xsd:complexType name="AutenticarUsuarioContenidoResponse">
-			  <xsd:all>
-			   <xsd:element name="AutenticarUsuarioContenidoResult" type="tns:Licencia"/>
-			  </xsd:all>
-			 </xsd:complexType>
-			</xsd:schema>
-			</types>
-			<message name="AutenticarUsuarioContenidoRequest">
-			  <part name="AutenticarUsuarioContenido" type="tns:AutenticarUsuarioContenido" /></message>
-			<message name="AutenticarUsuarioContenidoResponse">
-			  <part name="return" type="tns:AutenticarUsuarioContenidoResponse" /></message>
-			<wsdl:message name="AutenticarUsuarioContenidoWSEAuthenticateHeader">
-			  <part name="WSEAuthenticateHeader" element="tns:WSEAuthenticateHeader" />
-			</wsdl:message>
-			<portType name="ws_authenticationPortType">
-			  <operation name="AutenticarUsuarioContenido">
-				<documentation>Retorna una URL de acceso al libro digital a partir de una credencial válida para ese libro.&lt;br /&gt;&lt;br /&gt;
+<definitions xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://educacio.gencat.cat/proveedores/autenticacion/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://educacio.gencat.cat/proveedores/autenticacion/">
+  <types>
+    <xsd:schema targetNamespace="http://educacio.gencat.cat/proveedores/autenticacion/">
+     <xsd:import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
+     <xsd:import namespace="http://schemas.xmlsoap.org/wsdl/" />
+     <xsd:element name="WSEAuthenticateHeader" type="tns:WSEAuthenticateHeader" />
+     <xsd:complexType name="WSEAuthenticateHeader">
+       <xsd:sequence>
+         <xsd:element minOccurs="0" maxOccurs="1" name="User" type="xsd:string" />
+         <xsd:element minOccurs="0" maxOccurs="1" name="Password" type="xsd:string" />
+       </xsd:sequence>
+       <xsd:anyAttribute />
+     </xsd:complexType>
+     <xsd:complexType name="AutenticarUsuarioContenido">
+      <xsd:all>
+       <xsd:element name="Credencial" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+       <xsd:element name="ISBN" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+       <xsd:element name="IdUsuario" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+       <xsd:element name="NombreApe" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+       <xsd:element name="IdGrupo" type="xsd:string" minOccurs="0" maxOccurs="1"/><xsd:element name="Rol" type="tns:TipoRol" default="ESTUDIANTE" minOccurs="0" maxOccurs="1"/><xsd:element name="IdCurso" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+       <xsd:element name="IdCentro" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+       <xsd:element name="URLResultado" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+       <xsd:element name="IdContenidoLMS" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+       <xsd:element name="IdUnidad" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+       <xsd:element name="IdActividad" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      </xsd:all>
+     </xsd:complexType>
+     <xsd:simpleType name="TipoRol">
+       <xsd:restriction base="xsd:string">
+         <xsd:enumeration value="ESTUDIANTE"/>
+         <xsd:enumeration value="PROFESOR"/>
+       </xsd:restriction>
+     </xsd:simpleType><xsd:complexType name="Licencia">
+     <xsd:all>
+       <xsd:element name="Codigo" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+       <xsd:element name="Descripcion" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+       <xsd:element name="URL" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+     </xsd:all>
+     </xsd:complexType>
+     <xsd:complexType name="AutenticarUsuarioContenidoResponse">
+      <xsd:all>
+        <xsd:element name="AutenticarUsuarioContenidoResult" type="tns:Licencia"/>
+      </xsd:all>
+     </xsd:complexType>
+    </xsd:schema>
+  </types>
+  <message name="AutenticarUsuarioContenidoRequest">
+    <part name="AutenticarUsuarioContenido" type="tns:AutenticarUsuarioContenido" />
+  </message>
+  <message name="AutenticarUsuarioContenidoResponse">
+    <part name="return" type="tns:AutenticarUsuarioContenidoResponse" />
+  </message>
+  <wsdl:message name="AutenticarUsuarioContenidoWSEAuthenticateHeader">
+    <part name="WSEAuthenticateHeader" element="tns:WSEAuthenticateHeader" />
+  </wsdl:message>
+  <portType name="ws_authenticationPortType">
+    <operation name="AutenticarUsuarioContenido">
+      <documentation>Retorna una URL de acceso al libro digital a partir de una credencial válida para ese libro.&lt;br /&gt;&lt;br /&gt;
         Parámetros: &lt;br /&gt;&lt;br /&gt;
          - Credencial = Código de credencial del usuario para ese libro. &lt;br /&gt;
          - ISBN = Código ISBN del libro digital al que se solicita acceso. &lt;br /&gt;
@@ -78,25 +81,28 @@
              - (-6): El identificador de la actividad no es válido / URL de excepciones. &lt;br /&gt;
              - (-7): Rol incorrecto. El valor del rol es incorrecto / URL de excepciones. &lt;br /&gt;
              - (-101): Autenticación incorrecto. El usuario que solicita acceso a este método del servicio Web no es correcto. &lt;br /&gt;
-             - (-102): Autenticación incorrecto. El usuario que solicita acceso a este método del servicio Web no tiene permisos.&lt;br /&gt;&lt;br /&gt;</documentation>
-				<input message="tns:AutenticarUsuarioContenidoRequest"/>
-				<output message="tns:AutenticarUsuarioContenidoResponse"/>
-			  </operation>
-			</portType>
-			<binding name="ws_authenticationBinding" type="tns:ws_authenticationPortType">
-			  <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
-			  <operation name="AutenticarUsuarioContenido">
-				<soap:operation soapAction="http://educacio.gencat.cat/proveedores/autenticacion/#AutenticarUsuarioContenido" style="rpc"/>
-				<input>
-					<soap:body use="literal" namespace="http://educacio.gencat.cat/proveedores/autenticacion/"/>
-					<soap:header message="tns:AutenticarUsuarioContenidoWSEAuthenticateHeader" part="WSEAuthenticateHeader" use="literal" />
-				</input>
-				<output><soap:body use="literal" namespace="http://educacio.gencat.cat/proveedores/autenticacion/"/></output>
-			  </operation>
-			</binding>
-			<service name="ws_authentication">
-			  <port name="ws_authenticationPort" binding="tns:ws_authenticationBinding">
-				<soap:address location="http://educacio.gencat.cat/proveedores/autenticacion/AutenticarUsuarioContenido" style="document"/>
-			  </port>
-			</service>
-			</definitions>
+             - (-102): Autenticación incorrecto. El usuario que solicita acceso a este método del servicio Web no tiene permisos.&lt;br /&gt;&lt;br /&gt;
+      </documentation>
+      <input message="tns:AutenticarUsuarioContenidoRequest"/>
+      <output message="tns:AutenticarUsuarioContenidoResponse"/>
+    </operation>
+  </portType>
+  <binding name="ws_authenticationBinding" type="tns:ws_authenticationPortType">
+    <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="AutenticarUsuarioContenido">
+      <soap:operation soapAction="http://educacio.gencat.cat/proveedores/autenticacion/#AutenticarUsuarioContenido" style="rpc"/>
+      <input>
+        <soap:body use="literal" namespace="http://educacio.gencat.cat/proveedores/autenticacion/"/>
+        <soap:header message="tns:AutenticarUsuarioContenidoWSEAuthenticateHeader" part="WSEAuthenticateHeader" use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" namespace="http://educacio.gencat.cat/proveedores/autenticacion/"/>
+      </output>
+    </operation>
+  </binding>
+  <service name="ws_authentication">
+    <port name="ws_authenticationPort" binding="tns:ws_authenticationBinding">
+      <soap:address location="http://educacio.gencat.cat/proveedores/autenticacion/AutenticarUsuarioContenido" style="document"/>
+    </port>
+  </service>
+</definitions>

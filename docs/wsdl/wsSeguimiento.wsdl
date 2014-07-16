@@ -2,15 +2,15 @@
 <wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://educacio.gencat.cat/agora/seguimiento/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://educacio.gencat.cat/agora/seguimiento/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsdl:types>
     <s:schema elementFormDefault="qualified" targetNamespace="http://educacio.gencat.cat/agora/seguimiento/">
-    <s:element name="WSEAuthenticateHeader" type="tns:WSEAuthenticateHeader" />
-    <s:complexType name="WSEAuthenticateHeader">
-    <s:sequence>
-      <s:element minOccurs="0" maxOccurs="1" name="User" type="s:string" />
-      <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
-    </s:sequence>
-    <s:anyAttribute />
-    </s:complexType>
-    <s:element name="ResultadoDetalleExtendido">
+      <s:element name="WSEAuthenticateHeader" type="tns:WSEAuthenticateHeader" />
+      <s:complexType name="WSEAuthenticateHeader">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="User" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+        </s:sequence>
+        <s:anyAttribute />
+      </s:complexType>
+      <s:element name="ResultadoDetalleExtendido">
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="ResultadoExtendido" type="tns:SeguimientoExtendido" />
@@ -53,9 +53,9 @@
           <s:enumeration value="NO_INICIADO" />
           <s:enumeration value="INCOMPLETO" />
           <s:enumeration value="FINALIZADO" />
-		  <s:enumeration value="POR_CORREGIR" />
+          <s:enumeration value="POR_CORREGIR" />
           <s:enumeration value="CORREGIDO" />
-		</s:restriction>
+        </s:restriction>
       </s:simpleType>
       <s:simpleType name="TipoDetalle">
         <s:restriction base="s:string">
