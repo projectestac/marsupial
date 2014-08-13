@@ -25,9 +25,9 @@ function rcontent_add_instance($data){
  if(isset($data->status))      $popup_options[]="status=".$data->status;
  if(isset($data->height))      $popup_options[]="height=".$data->height;
  if(isset($data->width))       $popup_options[]="width=".$data->width;
-    
+
  $popup_options = implode(",",$popup_options);
- 
+
  $tmp = new stdClass();
  $tmp->course        = $data->course;
  $tmp->name          = $data->name;
@@ -47,15 +47,15 @@ function rcontent_add_instance($data){
 //********** FI
  $tmp->timecreated   = time();
  $tmp->timemodified  = time();
- 
+
  $id=$DB->insert_record("rcontent",$tmp);
- 
+
  if ($id!==false){
  	$tmp->id=$id;
  	rcontent_grade_item_update($tmp);
  }
- return $id; 
-    
+ return $id;
+
 }
 
 /**
@@ -65,9 +65,9 @@ function rcontent_add_instance($data){
  */
 function rcontent_update_instance($data){
    if(empty($data))
-       return false; 
+       return false;
    global $DB;
- 
+
     $popup_options = array();
     if(isset($data->resizable))   $popup_options[]="resizable=".$data->resizable;
     if(isset($data->scrollbars))  $popup_options[]="scrollbars=".$data->scrollbars;
@@ -78,9 +78,9 @@ function rcontent_update_instance($data){
     if(isset($data->status))      $popup_options[]="status=".$data->status;
     if(isset($data->height))      $popup_options[]="height=".$data->height;
     if(isset($data->width))       $popup_options[]="width=".$data->width;
-    
+
     $popup_options = implode(",",$popup_options);
- 
+
     $tmp = new stdClass();
     $tmp->id            = $data->instance;
     $tmp->course        = $data->course;
@@ -101,13 +101,13 @@ function rcontent_update_instance($data){
 //********** FI
     $tmp->timemodified  = time();
     $tmp->timecreated   = time();
- 
+
     if ($result = $DB->update_record("rcontent",$tmp)) {
         rcontent_grade_item_update($tmp);
     }
- 
- return $result; 
-   
+
+ return $result;
+
 }
 /**
  * Delete an instance
@@ -119,21 +119,21 @@ function rcontent_delete_instance($id){
     if (($data = $DB->get_record('rcontent', array('id' => $id))) === false) {
         return false;
     }
-    
+
     if (($DB->delete_records('rcontent', array('id' => $data->id))) === false) {
         return false;
     }
-    
+
     if($DB->delete_records('rcontent_grades',array('rcontentid'=>$data->id))===false){
     	return false;
     }
-    
+
     if($DB->delete_records('rcontent_grades_details',array('rcontentid'=>$data->id))===false){
     	return false;
     }
-    
+
     rcontent_grade_item_delete($data);
-    
+
     return true;
 }
 
@@ -142,7 +142,7 @@ function rcontent_user_outline(){
 }
 
 function rcontent_user_complete($course, $user, $mod, $rcontet){
-    return true;    
+    return true;
 }
 
 function rcontent_print_recent_activity($course,$isteacher,$timestart){
@@ -312,4 +312,27 @@ function rcontent_supports($feature) {
 	}
 }
 //********** FI
-?>
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Navigation API                                                             //
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Extends the global navigation tree by adding qv nodes if there is a relevant content
+ *
+ * This can be called by an AJAX request so do not rely on $PAGE as it might not be set up properly.
+ *
+ * @param navigation_node $navref An object representing the navigation tree node of the qv module instance
+ * @param stdClass $course
+ * @param stdClass $module
+ * @param cm_info $cm
+ */
+function rcontent_extend_navigation(navigation_node $navref, stdclass $course, stdclass $module, cm_info $cm) {
+    global $CFG, $OUTPUT, $USER, $DB;
+
+    if(file_exists($CFG->dirroot.'/blocks/rgrade/rgrade_table.php')){
+        $navref->add(get_string('rgrade', 'block_rgrade'), new moodle_url('/blocks/rgrade/rgrade_table.php',
+         array('courseid'=>$course->id, 'bookid'=>$module->bookid)));
+    }
+}
