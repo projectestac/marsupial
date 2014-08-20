@@ -22,7 +22,8 @@ Marsupial is based on SOAP, and operates in the following format:
 
 - **Remote content**: module for displaying external content. Uses web services to report results of exercises between textbook platforms and the VLE.
 
-NOTE: **Remote SCORM** is no longer maintained and has been removed from the "master" branch since August 2014. ZIP files with older versions of this module are archived on "/files/historical"
+
+**NOTE**: **Remote SCORM** is no longer maintained and has been removed from the "master" branch since August 2014. ZIP files with older versions of this module are archived on "/files/historical"
 
 
 ##Components
