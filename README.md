@@ -18,10 +18,12 @@ Marsupial has three main functions:
 
 ##Formats
 
-Marsupial is based on SCORM and SOAP, and operates in two formats:
+Marsupial is based on SOAP, and operates in the following format:
 
-- **Remote SCORM**: Like a regular SCORM object, but with media content residing outside the VLE and subjected to authentication. Results of exercises are reported directly to the VLE from the user's browser.
-- **Remote content**: Similar to Remote SCORM, but using web services to report results of exercises between textbook platforms and the VLE.
+- **Remote content**: module for displaying external content. Uses web services to report results of exercises between textbook platforms and the VLE.
+
+NOTE: **Remote SCORM** is no longer maintained and has been removed from the "master" branch since August 2014. ZIP files with older versions of this module are archived on "/files/historical"
+
 
 ##Components
 Marsupial has three main components:
