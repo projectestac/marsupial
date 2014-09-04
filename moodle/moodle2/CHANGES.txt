@@ -1,7 +1,10 @@
-Changes in progress
+Version 2.6.0.1 (2014-09-04)
 ---------------------------------------------------------------------------------------
 
- - Renewed version for 2.6
+ - Renewed version for Moodle 2.6
+ - Changed the versioning scheme: now the two first digits (2.6) indicate the Moodle
+   version which Marsupial has been tested.
+ - Removed RSCORM protocol, according to version 1.8 of the specifications
  - Update code to avoid deprecation warnings and errors
  - Code sorting and cleaning
 
