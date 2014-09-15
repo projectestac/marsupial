@@ -1,3 +1,10 @@
+Version 2.6.0.2 (2014-09-15)
+---------------------------------------------------------------------------------------
+
+ - Repaired access to activity level and new capability to manage own credentials
+ - Repaired a double dollar error in the tracker web service
+ - Deleting debug messages
+
 Version 2.6.0.1 (2014-09-04)
 ---------------------------------------------------------------------------------------
 
