@@ -1,3 +1,10 @@
+Version 2.6.0.3 (2014-09-25)
+---------------------------------------------------------------------------------------
+
+ - Solved problem when receiving only one book from Marsupial publishers
+ - MOODLE: Add admin menu for Marsupial managers
+ - Translation to Catalan and Spanish of "keymanager_import_export" message
+
 Version 2.6.0.2 (2014-09-15)
 ---------------------------------------------------------------------------------------
 
