@@ -1,3 +1,9 @@
+Version 2.6.0.4 (2014-10-07)
+---------------------------------------------------------------------------------------
+- Added more flexibility to Marsupial Webservice (now is not case sensitive and allows the lack of xmlns)
+- Added exception support when checking credential
+- Updated WSDL of wsSeguimiento
+
 Version 2.6.0.3 (2014-09-25)
 ---------------------------------------------------------------------------------------
 
