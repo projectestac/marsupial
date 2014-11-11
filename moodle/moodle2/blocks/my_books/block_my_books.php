@@ -37,6 +37,7 @@ class block_my_books extends block_list {
     	$this->content->items = array();
         $this->content->icons = array();
         $this->content->footer = '';
+        $mybooksconfig = get_config('mybooks');
 
         /// load user books
         $sql = "SELECT * FROM {rcommon_user_credentials} RUC
@@ -58,6 +59,8 @@ class block_my_books extends block_list {
 
 	        	/// check the format of the book
 	        	if ($book->format == 'scorm'){
+	        		// Block rscorm
+	        		continue;
 
 	        		/// check rscorm to know if isset entry for that book
 	        		if ($rscorm = $DB->get_record('rscorm', array('course' => 1, 'bookid' => $book->id, 'unitid' => 0))){
@@ -69,7 +72,7 @@ class block_my_books extends block_list {
 	        				continue;
 	        			}
 	        			$a = '<a href="'.$CFG->wwwroot.'/mod/rscorm/view.php?id='.$cm->id.'" title="'.$book->name.'"';
-	        			if ($CFG->mybooks_viewer_opening == 1){
+	        			if ($mybooksconfig->viewer_opening == 1){
 	        				$a .= ' target="_blank"';
 	        			}
 	        			$a .= '>'.$book->name.'</a>';
@@ -105,16 +108,16 @@ class block_my_books extends block_list {
 	        		    $add->auto           = 0;
 	        		    $add->coursemodule	 = 0;
 	        		    $add->cmidnumber	 = 0;
-	        		    $add->popup          = $CFG->mybooks_activity_opening;
-	        		    $add->resizable      = $CFG->mybooks_resizable;
-	        		    $add->scrollbars     = $CFG->mybooks_scrollbars;
-	        		    $add->directories    = $CFG->mybooks_directories;
-	        		    $add->location       = $CFG->mybooks_location;
-	        		    $add->menubar        = $CFG->mybooks_menubar;
-	        		    $add->toolbar        = $CFG->mybooks_toolbar;
-	        		    $add->status         = $CFG->mybooks_status;
-	        		    $add->width          = $CFG->mybooks_width;
-					    $add->height         = $CFG->mybooks_height;
+	        		    $add->popup          = $mybooksconfig->activity_opening;
+	        		    $add->resizable      = $mybooksconfig->resizable;
+	        		    $add->scrollbars     = $mybooksconfig->scrollbars;
+	        		    $add->directories    = $mybooksconfig->directories;
+	        		    $add->location       = $mybooksconfig->location;
+	        		    $add->menubar        = $mybooksconfig->menubar;
+	        		    $add->toolbar        = $mybooksconfig->toolbar;
+	        		    $add->status         = $mybooksconfig->status;
+	        		    $add->width          = $mybooksconfig->width;
+					    $add->height         = $mybooksconfig->height;
 
 					    $add->section        = 2;
 					    $add->visible        = 1 ;
@@ -163,7 +166,7 @@ class block_my_books extends block_list {
 					    }
 
 					    $a = '<a href="'.$CFG->wwwroot.'/mod/rscorm/view.php?id='.$add->coursemodule.'" title="'.$book->name.'"';
-					    if ($CFG->mybooks_viewer_opening == 1){
+					    if ($mybooksconfig->viewer_opening == 1){
 					    	$a .= ' target="_blank"';
 					    }
 					    $a .= '>'.$book->name.'</a>';
@@ -181,7 +184,7 @@ class block_my_books extends block_list {
 	        				continue;
 	        			}
 	        			$a = '<a href="'.$CFG->wwwroot.'/mod/rcontent/view.php?id='.$cm->id.'" title="'.$book->name.'"';
-	        			if ($CFG->mybooks_viewer_opening == 1){
+	        			if ($mybooksconfig->viewer_opening == 1){
 	        				$a .= ' target="_blank"';
 	        			}
 	        			$a .= '>'.$book->name.'</a>';
@@ -207,16 +210,16 @@ class block_my_books extends block_list {
 	        		    $add->framepage      = 1;
 	        		    $add->coursemodule	 = 0;
 	        		    $add->cmidnumber	 = 0;
-	        		    $add->windowpopup    = $CFG->mybooks_activity_opening;
-	        		    $add->resizable      = $CFG->mybooks_resizable;
-	        		    $add->scrollbars     = $CFG->mybooks_scrollbars;
-	        		    $add->directories    = $CFG->mybooks_directories;
-	        		    $add->location       = $CFG->mybooks_location;
-	        		    $add->menubar        = $CFG->mybooks_menubar;
-	        		    $add->toolbar        = $CFG->mybooks_toolbar;
-	        		    $add->status         = $CFG->mybooks_status;
-	        		    $add->width          = $CFG->mybooks_width;
-					    $add->height         = $CFG->mybooks_height;
+	        		    $add->windowpopup    = $mybooksconfig->activity_opening;
+	        		    $add->resizable      = $mybooksconfig->resizable;
+	        		    $add->scrollbars     = $mybooksconfig->scrollbars;
+	        		    $add->directories    = $mybooksconfig->directories;
+	        		    $add->location       = $mybooksconfig->location;
+	        		    $add->menubar        = $mybooksconfig->menubar;
+	        		    $add->toolbar        = $mybooksconfig->toolbar;
+	        		    $add->status         = $mybooksconfig->status;
+	        		    $add->width          = $mybooksconfig->width;
+					    $add->height         = $mybooksconfig->height;
 
 					    $add->section        = 2;
 					    $add->visible        = 1 ;
@@ -269,7 +272,7 @@ class block_my_books extends block_list {
 					    }
 
 					    $a = '<a href="'.$CFG->wwwroot.'/mod/rcontent/view.php?id='.$add->coursemodule.'" title="'.$book->name.'"';
-					    if ($CFG->mybooks_viewer_opening == 1){
+					    if ($mybooksconfig->viewer_opening == 1){
 					    	$a .= ' target="_blank"';
 					    }
 					    $a .= '>'.$book->name.'</a>';
@@ -286,7 +289,7 @@ class block_my_books extends block_list {
 		if (has_capability('local/rcommon:managecredentials', $context)){
 			$bt = '<a href="' . $CFG->wwwroot . '/local/rcommon/users.php?action=manage&username='.$USER->username.'" title="' . get_string('manage_button_title', 'block_my_books') . '"><button>' . get_string('manage_button', 'block_my_books') . '</button></a>';
 		}
-		if ($CFG->mybooks_addkey && has_capability('local/rcommon:manageowncredentials', $context)){
+		if ($mybooksconfig->addkey && has_capability('local/rcommon:manageowncredentials', $context)){
 			$bt .= '<a href="' . $CFG->wwwroot.'/local/rcommon/add_user_credential.php?username='.$USER->username.'" title="' . get_string('addkey_button_title', 'block_my_books') . '"><button>' . get_string('addkey_button', 'block_my_books') . '</button></a>';
 		}
 		$this->content->items[] = '<br>' . $bt;
