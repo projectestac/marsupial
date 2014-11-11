@@ -31,8 +31,7 @@ class wsSeguimiento{
 
 if (isset($_REQUEST['wsdl']) || isset($_REQUEST['WSDL'])) {
     header('Content-type: text/xml');
-    $wsdl = rcommon_get_wsdl("$CFG->wwwroot/mod/rcontent/WebServices/wsSeguimiento_wsdl.php");
-    print($wsdl);
+    include_once("$CFG->dirroot/mod/rcontent/WebServices/wsSeguimiento_wsdl.php");
 } else {
     ini_set("soap.wsdl_cache_enabled", "0"); // disabling WSDL cache
 
