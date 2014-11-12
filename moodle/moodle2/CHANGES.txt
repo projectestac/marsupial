@@ -1,3 +1,12 @@
+Changes in progress 2.6.0.5
+---------------------------------------------------------------------------------------
+- Book screen now has the info of the activities that uses that book
+- Protection over deleting books
+- Do not pull wsdl thought the internet
+- Delete invalid books and control its credentials
+- Added proxybypass to curl calls
+- Code cleaning and settings moved to each module
+
 Version 2.6.0.4 (2014-10-07)
 ---------------------------------------------------------------------------------------
 
