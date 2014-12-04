@@ -60,8 +60,7 @@ function get_books_structure_publisher($publisher, $isbn = false) {
 
                 // Si se ha especificado un isbn guarda el libro
                 if (!$isbn || $cod_isbn == $isbn) {
-                    echo '<li>ISBN: '.$cod_isbn.' -- ';
-
+                    $message = 'ISBN: '.$cod_isbn;
                     // Obtiene los datos del indice del libro
                     try {
                         $instance = new StdClass();
@@ -74,11 +73,11 @@ function get_books_structure_publisher($publisher, $isbn = false) {
                         rcommon_book::add_update($instance);
 
                         get_book_structure($publisher, $cod_isbn);
-                        echo 'OK';
+                        echo '<li>'.$OUTPUT->notification($message, 'notifysuccess').'</li>';
                     } catch( Exception $e){
-                        echo "KO! -- <span style='color: red;'>".$e->getMessage()."</span>";
+                        $message .=  " - Error: ".$e->getMessage();
+                        echo '<li>'.$OUTPUT->notification($message).'</li>';
                     }
-                    echo '</li>';
                 }
             }
             echo '</ol>';
@@ -110,31 +109,30 @@ function get_books($publisher) {
 
         $params = new stdClass();
         $params->IdCentro = @new SoapVar($center, XSD_STRING, "string", "http://www.w3.org/2001/XMLSchema");
-
-        $response = $client->__soapCall("ObtenerTodos", array($params));
+        $response = $client->ObtenerTodos(array($params));
 
         log_to_file("get_books Request: ".$client->__getLastRequest());
         log_to_file("get_books Response: ".$client->__getLastResponse());
 
-        //check if there are any response error
+        // Check if there are any response error
         $response = rcommon_object_to_array_lower($response, true);
         $response = isset($response['obtenertodosresult']) ? $response['obtenertodosresult'] : false;
-        if (!$response || (isset($response['codigo']) && $response['codigo'] <= 0)) {
-            $message  = 'Código: '.$response['codigo'].' - '.$response['descripcion'];
+        if ($response && isset($response['codigo']) && $response['codigo'] <= 0) {
+            $text = array('code' => $response['codigo'], 'description' => $response['descripcion']);
+            $message  = get_string('wserror', 'local_rcommon', $text);
             if (isset($response['url'])) {
                 $message .= ', URL: '.test_ws_url($response['url']);
             }
-            $message = rcommon_ws_error('get_books', $message);
-
-            echo "<br>".$message."<br>";
+            throw new Exception($message);
+        } else if ($response && isset($response['catalogo']['libros']['libro'])) {
+            return $response['catalogo']['libros']['libro'];
         } else {
-            if (isset($response['catalogo']['libros']['libro'])) {
-                return $response['catalogo']['libros']['libro'];
-            }
+            debugging('<pre>'.htmlentities($client->__getLastResponse()).'</pre>');
+            throw new Exception(get_string('empty_response_error', 'local_rcommon'));
         }
 
-    } catch(Exception $fault) {
-        $message = rcommon_ws_error('get_books', $fault->getMessage());
+    } catch(Exception $e) {
+        $message = rcommon_ws_error('get_books', $e->getMessage());
         throw new Exception($message);
     }
     return false;
@@ -160,19 +158,26 @@ function get_book_structure($publisher, $isbn) {
 
         $params = new stdClass();
         $params->ISBN = @new SoapVar($isbn, XSD_STRING, "string", "http://www.w3.org/2001/XMLSchema");
-        $response = $client->__soapCall("ObtenerEstructura", array($params));
-        //log_to_file("wsget_books_structure Request: ".$client->__getLastRequest());
-        //log_to_file("wsget_books_structure Response: ".$client->__getLastResponse());
+        $response = $client->ObtenerEstructura($params);
+
+        log_to_file("get_book_structure Request: ".$client->__getLastRequest());
+        log_to_file("get_book_structure Response: ".$client->__getLastResponse());
+
     } catch(Exception $fault) {
         log_to_file("wsBookStructure: get_book_structure - Exception = ".$fault->getMessage());
         $message = rcommon_ws_error('get_book_structure', $fault->getMessage());
         throw new Exception($message);
     }
-
     $response = rcommon_object_to_array_lower($response, true);
     $response = isset($response['obtenerestructuraresult']) ? $response['obtenerestructuraresult'] : false;
-    if (!$response || (isset($response['codigo']) && $response['codigo'] <= 0)) {
-        $message  = 'Código: '.$response['codigo'].' - '.$response['descripcion'];
+    if (!$response) {
+        $message  = get_string('empty_response_error', 'local_rcommon');
+        debugging('<pre>'.htmlentities($client->__getLastResponse()).'</pre>');
+        $message = rcommon_ws_error('get_book_structure', $message);
+        throw new Exception(get_string('empty_response_error', 'local_rcommon'));
+    } else if (isset($response['codigo']) && $response['codigo'] <= 0) {
+        $text = array('code' => $response['codigo'], 'description' => $response['descripcion']);
+        $message  = get_string('wserror', 'local_rcommon', $text);
         if (isset($response['url'])) {
             $message .= ', URL: '.test_ws_url($response['url']);
         }

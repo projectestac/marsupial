@@ -117,6 +117,9 @@ function rcommon_object_to_array_lower($value, $recursive = false) {
     // Solve lack of xmlns
     if(count($array) == 1 && isset($array['any'])){
         $anyxml = simplexml_load_string ($array['any']);
+        if (!$anyxml) {
+            return false;
+        }
         $array = array($anyxml->getName() =>$anyxml);
     }
 

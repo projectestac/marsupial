@@ -16,7 +16,11 @@ if (!has_capability('local/rcommon:managecredentials', $context)) {
     }
     $PAGE->set_url(new moodle_url('/local/local_rcommon/users.php'));
     $PAGE->set_context($context);
-    $PAGE->set_pagelayout('frontpage');
+    $pagetitle = get_string('keymanager', 'local_rcommon');
+    $PAGE->set_title($pagetitle);
+    $PAGE->set_heading($pagetitle);
+    $PAGE->navbar->add($pagetitle, null, null, navigation_node::TYPE_CUSTOM, null);
+    $PAGE->set_pagelayout('incourse');
 } else {
     admin_externalpage_setup('marsupial_credentials_users');
     $manageown = false;
@@ -33,7 +37,7 @@ echo $OUTPUT->heading(get_string('keymanager', 'local_rcommon'));
 // Key synchronization
 switch ($action) {
     case 'manage':
-        $username = $manageown ? $USER->username : required_param('username', PARAM_TEXT);
+        $username = isset($username) ? $username : optional_param('username', $USER->username, PARAM_TEXT);
         $record = $DB->get_record('user', array('username' => $username));
         if (!$record) {
             echo $OUTPUT->notification(get_string('usernotfound', 'local_rcommon'));
@@ -50,14 +54,14 @@ switch ($action) {
             $credentials = $DB->get_records_sql($sql, array('userid' => $id));
             echo '<input type="submit" onclick="document.location.href=\'add_user_credential.php?username='.$username.'\'" value="'.get_string('keyadd', 'local_rcommon').'" />';
             echo '<p>'.get_string('keysshowingfor','local_rcommon').' <b>'.htmlentities($username).'</b><br/>';
-            if(!$credentials) {
+            if (!$credentials) {
                 echo $OUTPUT->notification(get_string('userhasnokeys','local_rcommon'));
             } else {
                 $table = new html_table();
                 $table->class = 'generaltable generalbox';
                 $table->head = array(get_string('publisher', 'local_rcommon'),get_string('book', 'local_rcommon'), get_string('key','local_rcommon'), get_string('actions','local_rcommon'),"");
                 $table->align = array('left','left', 'center', 'center', 'center');
-                foreach($credentials as $credential) {
+                foreach ($credentials as $credential) {
                     $name = $credential->name? $credential->name : get_string('deleted_book', 'local_rcommon');
                     $publisher = $credential->pname? $credential->pname : get_string('deleted_book', 'local_rcommon');
                     $row = array();
@@ -86,21 +90,21 @@ switch ($action) {
     break;
     case 'delete':
         $id       = required_param('id', PARAM_INT);
-        $username = $manageown ? $USER->username : required_param('username', PARAM_TEXT);
+        $username = isset($username) ? $username : optional_param('username', $USER->username, PARAM_TEXT);
         $confirm  = optional_param('confirm', false, PARAM_BOOL);
-        if(!$confirm) {
+        if (!$confirm) {
             echo '<p>'.get_string('keyconfirmdelete', 'local_rcommon').'</p>';
             echo '<br/>';
             echo '<a href="users.php?action=delete&username='.$username.'&confirm=true&id='.$id.'">'.get_string('keydelbtn', 'local_rcommon').'</a> &nbsp;&nbsp;<a href="users.php?action=manage&username='.urlencode($username).'">'.get_string('back').'</a>';
         } else {
-            //delete
+            // Delete
             credentials::delete($id);
             echo '<script>document.location.href="users.php?action=manage&username='.$username.'";</script>';
         }
     break;
     default:
         require_capability('local/rcommon:managecredentials', context_system::instance());
-         $usercount = get_users(false, '', true);
+        $usercount = get_users(false, '', true);
         $with_credentials = $DB->get_field_sql ('SELECT DISTINCT count(u.id) AS with_credentials FROM {user} u WHERE u.id IN (SELECT uc.euserid FROM {rcommon_user_credentials} uc GROUP BY uc.euserid)');
 
         $a = new StdClass();
@@ -114,8 +118,8 @@ switch ($action) {
         $sort         = 'firstname';
         $page         = optional_param('page', 0, PARAM_INT);
         $perpage      = optional_param('perpage', 30, PARAM_INT);        // how many per page
-        $show           = optional_param('show', 'with', PARAM_TEXT);        // how many per page
-        $username = optional_param('username', false, PARAM_TEXT);
+        $show         = optional_param('show', 'with', PARAM_TEXT);        // how many per page
+        $username     = optional_param('username', false, PARAM_TEXT);
 
         /*echo '<p>'.get_string('keyslookupusertext','local_rcommon').'</p>';
         $users = get_users(true, '', true);
