@@ -32,7 +32,13 @@ Marsupial has three main components:
 |Folder|Component|
 |:------|:---------|
 |/docs|The documents containing the open specification|
-|/moodle|The implementation of a “Marsupial” client for Moodle|
+|/moodle|The implementation of a “Marsupial” client for Moodle 2|
+
+###Relases
+
+Release packages can be found on [Relases Tab](https://github.com/projectestac/marsupial/releases)
+
+Old historical ones have been moved to [historical_files branch](https://github.com/projectestac/marsupial/tree/historical_files)
 
 ###Marsupial Publisher Simulator
 
