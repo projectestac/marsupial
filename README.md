@@ -33,7 +33,12 @@ Marsupial has three main components:
 |:------|:---------|
 |/docs|The documents containing the open specification|
 |/moodle|The implementation of a “Marsupial” client for Moodle|
-|/mps|A minimalistic implementation of a publisher platform, called Marsupial Publisher Simulator (MPS). It implements all the server-side protocols and provides “example” books for testing|
+
+###Marsupial Publisher Simulator
+
+https://github.com/projectestac/marsupial-mps
+
+A minimalistic implementation of a publisher platform, called Marsupial Publisher Simulator (MPS). It implements all the server-side protocols and provides “example” books for testing
 
 ##Licensing
 Marsupial is open source software, licensed under the terms of the [GNU General Public License v2](http://www.gnu.org/licenses/gpl-2.0.html).
