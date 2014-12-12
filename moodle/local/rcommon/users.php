@@ -38,11 +38,11 @@ echo $OUTPUT->heading(get_string('keymanager', 'local_rcommon'));
 switch ($action) {
     case 'manage':
         $username = isset($username) ? $username : optional_param('username', $USER->username, PARAM_TEXT);
-        $record = $DB->get_record('user', array('username' => $username));
-        if (!$record) {
+        $user = $DB->get_record('user', array('username' => $username));
+        if (!$user) {
             echo $OUTPUT->notification(get_string('usernotfound', 'local_rcommon'));
         } else {
-            $id = $record->id;
+            $id = $user->id;
 
             $sql = 'SELECT rcuc.*, rcb.name, rcp.name AS pname
                     FROM {rcommon_user_credentials} rcuc
@@ -57,14 +57,18 @@ switch ($action) {
             if (!$credentials) {
                 echo $OUTPUT->notification(get_string('userhasnokeys','local_rcommon'));
             } else {
+                echo '<form action="credentials_bulk.php?action=unassign" id="frm" name="frm" method="post">';
                 $table = new html_table();
                 $table->class = 'generaltable generalbox';
-                $table->head = array(get_string('publisher', 'local_rcommon'),get_string('book', 'local_rcommon'), get_string('key','local_rcommon'), get_string('actions','local_rcommon'),"");
-                $table->align = array('left','left', 'center', 'center', 'center');
+                $table->head = array('', get_string('publisher', 'local_rcommon'),
+                                get_string('book', 'local_rcommon'), get_string('key', 'local_rcommon'),
+                                get_string('actions', 'local_rcommon'), "");
+                $table->align = array('center', 'left', 'left', 'center', 'center', 'center');
                 foreach ($credentials as $credential) {
-                    $name = $credential->name? $credential->name : get_string('deleted_book', 'local_rcommon');
-                    $publisher = $credential->pname? $credential->pname : get_string('deleted_book', 'local_rcommon');
+                    $name = $credential->name ? $credential->name : get_string('deleted_book', 'local_rcommon');
+                    $publisher = $credential->pname ? $credential->pname : get_string('deleted_book', 'local_rcommon');
                     $row = array();
+                    $row[] = '<input type="checkbox" name="ids[]" value="' . $credential->id . '" onChange="allow_actions();">';
                     $row[] = $publisher;
                     $row[] = $name.' ('.$credential->isbn.')';
                     $row[] = $credential->credentials;
@@ -79,6 +83,10 @@ switch ($action) {
                     $table->data[] = $row;
                 }
                 echo html_writer::table($table);
+                echo '<input id="action" type="button" onclick="confirm_actions(this);" value="' . get_string('keymanager_unassignaction', 'local_rcommon') . '" disabled>
+                <input type="button" onclick="select_all();" value = "' . get_string('keymanager_selectall', 'local_rcommon') . '">
+                <input type="button" onclick="unselect_all();" value="' . get_string('keymanager_unselectall', 'local_rcommon') . '">
+                </form>';
                 $jsmodule = array(
                     'name'     => 'local_rcommon',
                     'fullpath' => '/local/rcommon/javascript.js',
@@ -142,22 +150,22 @@ switch ($action) {
 
         echo $OUTPUT->single_select('users.php?action=manage', 'username', $options, $username);*/
 
-        $options = array('all' => get_string('showallusers'), 'with' => get_string('with_credentials', 'local_rcommon'), 'without' => get_string('without_credentials', 'local_rcommon'));
-        echo get_string('filter','local_rcommon').': ';
+        $options = array('all' => get_string('showallusers'),
+                        'with' => get_string('with_credentials', 'local_rcommon'),
+                        'without' => get_string('without_credentials', 'local_rcommon'));
+        echo get_string('filter', 'local_rcommon').': ';
         echo $OUTPUT->single_select('users.php', 'show', $options, $show, null);
 
-        if($show == 'with') {
+        if ($show == 'with') {
             $join = 'INNER JOIN';
             $extrasql = "";
-        } else if($show == 'without') {
+        } else if ($show == 'without') {
             $join = 'LEFT JOIN';
             $extrasql = ' AND cr.euserid is NULL';
         } else {
             $join = 'LEFT JOIN';
             $extrasql = "";
         }
-
-
 
         $sql = "SELECT u.id, u.firstname, u.lastname, u.username, COUNT(DISTINCT cr.id) AS books FROM {user} u
                 $join {rcommon_user_credentials} cr
@@ -170,7 +178,7 @@ switch ($action) {
                 ON u.id = cr.euserid
                 WHERE u.confirmed = 1 AND u.deleted = 0 AND u.username != 'guest' $extrasql";
 
-        $users = $DB->get_records_sql ($sql, array(), $page*$perpage, $perpage);
+        $users = $DB->get_records_sql ($sql, array(), $page * $perpage, $perpage);
         $usercount = $DB->count_records_sql ($countsql);
         flush();
 
@@ -224,3 +232,77 @@ switch ($action) {
 
 echo $OUTPUT->footer();
 
+// Javascript
+echo '<script type="text/javascript">
+    function confirm_actions(el){
+        if(el.value == ""){
+            return false;
+        }
+
+        //count checked checks
+        chk_cnt = 0;
+        console.log(document.frm.elements);
+        var checkboxes = document.frm.elements["ids[]"];
+        for (var x in checkboxes){
+            if (checkboxes[x].checked){
+                chk_cnt++;
+                console.log(checkboxes[x].checked);
+            }
+        }
+
+        //stop execution if there is any check checked
+        if (chk_cnt == 0){
+            return false;
+        }
+
+        //confirm message
+        var message = Array();
+        message= "' . get_string('keymanager_messageunassing', 'local_rcommon') . '";
+
+        if (!confirm(message.replace("XX", chk_cnt))){
+            return false;
+        }
+
+        document.frm.submit();
+    }
+
+    function select_all(){
+        for (var element in document.frm.elements){
+            if (document.frm.elements[element].name == "ids[]"){
+                if (!document.frm.elements[element].checked){
+                    document.frm.elements[element].checked = true;
+                }
+            }
+        }
+        document.getElementById(\'action\').disabled = false;
+    }
+
+    function unselect_all(){
+        for (var element in document.frm.elements){
+            if (document.frm.elements[element].name == "ids[]"){
+                if (document.frm.elements[element].checked){
+                    document.frm.elements[element].checked = false;
+                }
+            }
+        }
+        document.getElementById(\'action\').disabled = true;
+    }
+
+    function allow_actions(){
+        var active = false;
+        for (var element in document.frm.elements){
+            if (document.frm.elements[element].name == "ids[]"){
+                if (document.frm.elements[element].checked){
+                    active = true;
+                    break;
+                }
+            }
+        }
+
+        if (active){
+            document.getElementById(\'action\').disabled = false;
+        } else {
+            document.getElementById(\'action\').disabled = true;
+        }
+    }
+</script>';
