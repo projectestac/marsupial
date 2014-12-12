@@ -50,7 +50,7 @@ switch ($action) {
                         ON rcb.isbn =  rcuc.isbn
                     LEFT JOIN {rcommon_publisher} rcp
                         ON rcp.id = rcb.publisherid
-                    WHERE euserid = :userid ORDER BY rcb.name ASC ';
+                    WHERE euserid = :userid ORDER BY rcp.name, rcb.name ASC ';
             $credentials = $DB->get_records_sql($sql, array('userid' => $id));
             echo '<input type="submit" onclick="document.location.href=\'add_user_credential.php?username='.$username.'\'" value="'.get_string('keyadd', 'local_rcommon').'" />';
             echo '<p>'.get_string('keysshowingfor','local_rcommon').' <b>'.htmlentities($username).'</b><br/>';
@@ -115,11 +115,23 @@ switch ($action) {
 
         $context = context_system::instance();
         $site = get_site();
-        $sort         = 'firstname';
+        $sort         = optional_param('sort', 'firstname', PARAM_TEXT);
+        $dir         = optional_param('dir', 'ASC', PARAM_TEXT);
         $page         = optional_param('page', 0, PARAM_INT);
         $perpage      = optional_param('perpage', 30, PARAM_INT);        // how many per page
         $show         = optional_param('show', 'with', PARAM_TEXT);        // how many per page
         $username     = optional_param('username', false, PARAM_TEXT);
+
+        $columns = array('firstname' => get_string('firstname'),
+                             'lastname' => get_string('lastname'),
+                             'username' => get_string('username'));
+        if (isset($columns[$sort])) {
+            $sortname = 'u.'.$sort;
+        } else {
+            $sort = 'firstname';
+            $sortname = 'u.'.$sort;
+            $dir = 'ASC';
+        }
 
         /*echo '<p>'.get_string('keyslookupusertext','local_rcommon').'</p>';
         $users = get_users(true, '', true);
@@ -144,27 +156,48 @@ switch ($action) {
             $join = 'LEFT JOIN';
             $extrasql = "";
         }
+
+
+
         $sql = "SELECT u.id, u.firstname, u.lastname, u.username, COUNT(DISTINCT cr.id) AS books FROM {user} u
                 $join {rcommon_user_credentials} cr
                 ON u.id = cr.euserid
                 WHERE u.confirmed = 1 AND u.deleted = 0 AND u.username != 'guest' $extrasql
-                GROUP BY u.id, u.firstname, u.lastname, u.username ORDER BY :sort";
+                GROUP BY u.id, u.firstname, u.lastname, u.username ORDER BY $sort";
 
-        $users = $DB->get_records_sql ($sql, array('sort'=> $sort), $page*$perpage, $perpage);
+        $countsql = "SELECT count(DISTINCT u.id) FROM {user} u
+                $join {rcommon_user_credentials} cr
+                ON u.id = cr.euserid
+                WHERE u.confirmed = 1 AND u.deleted = 0 AND u.username != 'guest' $extrasql";
 
+        $users = $DB->get_records_sql ($sql, array(), $page*$perpage, $perpage);
+        $usercount = $DB->count_records_sql ($countsql);
         flush();
 
         if ($users) {
-            $baseurl = new moodle_url('/local/rcommon/users.php', array('perpage' => $perpage));
+            $baseurl = new moodle_url('/local/rcommon/users.php', array('perpage' => $perpage, 'show' => $show, 'sort' => $sort, 'dir' => $dir));
             echo $OUTPUT->paging_bar($usercount, $page, $perpage, $baseurl);
+
+
+            foreach ($columns as $column => $columtext) {
+                if ($sort != $column) {
+                    $columnicon = "";
+                    $columndir = "ASC";
+                } else {
+                    $columndir = $dir == "ASC" ? "DESC" : "ASC";
+                    $columnicon = ($dir == "ASC") ? "sort_asc" : "sort_desc";
+                    $columnicon = "<img class='iconsort' src=\"" . $OUTPUT->pix_url('t/' . $columnicon) . "\" alt=\"\" />";
+                }
+                $columns[$column] = "<a href=\"users.php?sort=$column&dir=$columndir&show=$show\">".$columtext."</a>$columnicon";
+            }
 
             $table = new html_table();
             $table->head = array ();
-            $table->head[] = get_string('firstname').' / '.get_string('lastname');
-            $table->head[] = get_string('username');
+            $table->head[] = $columns['firstname'].' / '.$columns['lastname'];
+            $table->head[] = $columns['username'];
             $table->head[] = get_string('marsupialcredentials', 'local_rcommon');
             $table->head[] = get_string('actions');
-            $table->align = array('left','left','center','center');
+            $table->align = array('left', 'left', 'center', 'center');
 
             $table->id = "users";
             foreach ($users as $user) {
