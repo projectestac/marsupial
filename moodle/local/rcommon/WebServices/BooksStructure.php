@@ -107,9 +107,8 @@ function get_books($publisher) {
 
         $client = get_marsupial_ws_client($publisher);
 
-        $params = new stdClass();
-        $params->IdCentro = @new SoapVar($center, XSD_STRING, "string", "http://www.w3.org/2001/XMLSchema");
-        $response = $client->ObtenerTodos(array($params));
+        $idcentro = @new SoapVar($center, XSD_STRING, "string", "http://www.w3.org/2001/XMLSchema");
+        $response = $client->ObtenerTodos(array('IdCentro' => $idcentro));
 
         log_to_file("get_books Request: ".$client->__getLastRequest());
         log_to_file("get_books Response: ".$client->__getLastResponse());
@@ -157,9 +156,8 @@ function get_book_structure($publisher, $isbn) {
     try {
         $client = get_marsupial_ws_client($publisher);
 
-        $params = new stdClass();
-        $params->ISBN = @new SoapVar($isbn, XSD_STRING, "string", "http://www.w3.org/2001/XMLSchema");
-        $response = $client->ObtenerEstructura($params);
+        $isbnparam = @new SoapVar($isbn, XSD_STRING, "string", "http://www.w3.org/2001/XMLSchema");
+        $response = $client->ObtenerEstructura(array('ISBN' => $isbnparam));
 
         log_to_file("get_book_structure Request: ".$client->__getLastRequest());
         log_to_file("get_book_structure Response: ".$client->__getLastResponse());
@@ -173,8 +171,11 @@ function get_book_structure($publisher, $isbn) {
     $response = isset($response['obtenerestructuraresult']) ? $response['obtenerestructuraresult'] : false;
     if (!$response) {
         $message  = get_string('empty_response_error', 'local_rcommon');
+        print_object($client->__getLastRequest());
+        print_object($client->__getLastResponse());
         debugging('<pre>'.htmlentities($client->__getLastResponse()).'</pre>');
         $message = rcommon_ws_error('get_book_structure', $message);
+        die();
         throw new Exception(get_string('empty_response_error', 'local_rcommon'));
     } else if (isset($response['codigo']) && $response['codigo'] <= 0) {
         $text = array('code' => $response['codigo'], 'description' => $response['descripcion']);
