@@ -1,5 +1,15 @@
-Changes in progress 2.6.0.5
+Version 2.6.0.5 (2015-01-28)
 ---------------------------------------------------------------------------------------
+
+- Now XML responses admits any tags with multiple children
+- Checked ISB and IdCentro were being sent
+- Add bulk credentials manage in the user screen
+- Sort users when managing credentials
+- Files moved to historical_files branch
+- MPS moved to marsupial-mps repo
+- Rewrite of Import
+- Recover add own key feature
+- Units and activities not included in the book structure are not created anymore
 - Book screen now has the info of the activities that uses that book
 - Protection over deleting books
 - Do not pull wsdl thought the internet
