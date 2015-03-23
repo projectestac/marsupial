@@ -278,12 +278,18 @@ function get_ResultadoDetalleExtendido($ResultadoExtendido, $user, $passwd) {
             return generate_error("EstadoInvalido", "", "ResultadoDetalleExtendido", $cm->id);
         }
 
-        if (!valid_user($ResultadoExtendido->idUsuario, $rcontent->course)) {
-            return generate_error("UsrNoExisteEnCurso", get_string('user', 'rcontent') . ": {$ResultadoExtendido->idUsuario} - " . get_string('course', 'rcontent') . ": {$rcontent->course}", "ResultadoDetalleExtendido",$cm->id);
-        }
+        if ($rcontent->course == SITEID) {
+            if (!$DB->record_exists('user',  array('id' => $ResultadoExtendido->idUsuario))) {
+                return generate_error("UsrNoExisteEnCurso", get_string('user', 'rcontent') . ": {$ResultadoExtendido->idUsuario} - " . get_string('course', 'rcontent') . ": {$rcontent->course}", "ResultadoDetalleExtendido",$cm->id);
+            }
+        } else {
+            if (!valid_user($ResultadoExtendido->idUsuario, $rcontent->course)) {
+                return generate_error("UsrNoExisteEnCurso", get_string('user', 'rcontent') . ": {$ResultadoExtendido->idUsuario} - " . get_string('course', 'rcontent') . ": {$rcontent->course}", "ResultadoDetalleExtendido",$cm->id);
+            }
 
-        if (!has_capability('mod/rcontent:savetrack', $contextmodule, $ResultadoExtendido->idUsuario)) {
-            return generate_error("SinPermisosGuardarSeguimiento", get_string('user', 'rcontent') . ": {$ResultadoExtendido->idUsuario}", "ResultadoDetalleExtendido",$cm->id);
+            if (!has_capability('mod/rcontent:savetrack', $contextmodule, $ResultadoExtendido->idUsuario)) {
+                return generate_error("SinPermisosGuardarSeguimiento", get_string('user', 'rcontent') . ": {$ResultadoExtendido->idUsuario}", "ResultadoDetalleExtendido",$cm->id);
+            }
         }
 
         $unidad = valid_unit($ResultadoExtendido, $book, $rcontent->unitid);
