@@ -339,12 +339,6 @@ function get_ResultadoDetalleExtendido($ResultadoExtendido, $user, $passwd) {
                             'activityid' => $instance->activityid,
                             'attempt' => $instance->attempt);
 
-            //MARSUPIAL *********** ELIMINAT -> Not check the FechaHoraInicio field
-            //2011.12.19 @abertranb
-            //if (isset($detalle->FechaHoraInicio))
-            //    $select['starttime']= $detalle->FechaHoraInicio;
-            // ********** FI
-
             if (!$rcont_gradeid = $DB->get_field('rcontent_grades', 'id', $select)) {
                 $instance->timecreated = $instance->timemodified;
                 $rcont_gradeid = $DB->insert_record('rcontent_grades', $instance);
@@ -400,16 +394,10 @@ function get_ResultadoDetalleExtendido($ResultadoExtendido, $user, $passwd) {
 
                 $select = array('userid' => $instance->userid,
                                 'rcontentid' => $instance->rcontentid,
-                                'unitid' => $instance->activityid,
-                                'activityid' => $actividadid,
-                                'code' => $detalle->IdDetalle,
+                                'unitid' => $instance->unitid,
+                                'activityid' => $instance->activityid ,
+                                'code' => $instance->code,
                                 'attempt' => $instance->attempt);
-
-                //MARSUPIAL *********** ELIMINAT -> Not check the FechaHoraInicio field
-                //2011.12.19 @abertranb
-                //if (isset($detalle->FechaHoraInicio))
-                //    $select = $select. ' AND starttime='. $detalle->FechaHoraInicio;
-                // ********** FI
 
                 if (!$rcont_gradeid = $DB->get_field('rcontent_grades_details', 'id', $select)) {
                     $instance->timecreated = $instance->timemodified;
