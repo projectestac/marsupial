@@ -9,7 +9,7 @@ require_once($CFG->dirroot.'/local/rcommon/locallib.php');
  * @return obj -> web service response
  */
 function AuthenticateUserContent($data, $usr_creden = false, $showurl = true){
-    global $CFG, $DB, $USER;
+    global $CFG, $DB, $USER, $OUTPUT;
 
         $from = optional_param('from', '', PARAM_TEXT);
 

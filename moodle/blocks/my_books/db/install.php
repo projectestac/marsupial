@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-function xmldb_rcontent_install() {
+function xmldb_block_my_books_install() {
     global $DB, $CFG;
     if (isset($CFG->isagora) && $CFG->isagora) {
         $DB->set_field('block', 'visible', 0, array('name' => 'my_books'));
