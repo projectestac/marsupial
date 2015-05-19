@@ -27,7 +27,8 @@ function rcontent_add_instance($data){
     $tmp = new stdClass();
     $tmp->course        = $data->course;
     $tmp->name          = $data->name;
-    $tmp->summary       = $data->summary;
+    $tmp->intro = $data->intro;
+    $tmp->introformat = $data->introformat;
     $tmp->levelid       = (isset($data->levelid))?$data->levelid:required_param('level',PARAM_INT);
     $tmp->bookid        = (isset($data->isbn))?$data->isbn:required_param('isbn',PARAM_INT);
     $tmp->unitid        = (isset($data->unit))?$data->unit:required_param('unit',PARAM_INT);
@@ -78,7 +79,8 @@ function rcontent_update_instance($data){
     $tmp->id            = $data->instance;
     $tmp->course        = $data->course;
     $tmp->name          = $data->name;
-    $tmp->summary       = $data->summary;
+    $tmp->intro = $data->intro;
+    $tmp->introformat = $data->introformat;
     $tmp->levelid       = (isset($data->levelid))?$data->levelid:required_param('level',PARAM_INT);
     $tmp->bookid        = (isset($data->isbn))?$data->isbn:required_param('isbn',PARAM_INT);
     $tmp->unitid        = (isset($data->unit))?$data->unit:required_param('unit',PARAM_INT);
@@ -293,7 +295,7 @@ function rcontent_supports($feature) {
 		case FEATURE_GROUPS:                  return false;
 		case FEATURE_GROUPINGS:               return false;
 		case FEATURE_GROUPMEMBERSONLY:        return true;
-		case FEATURE_MOD_INTRO:               return false;
+		case FEATURE_MOD_INTRO:               return true;
 		case FEATURE_COMPLETION_TRACKS_VIEWS: return true;
 		case FEATURE_COMPLETION_HAS_RULES:    return true;
 		case FEATURE_GRADE_HAS_GRADE:         return true;
