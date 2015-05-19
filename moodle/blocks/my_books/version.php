@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2015042800;        // The current plugin version (Date: YYYYMMDDXX)
+$plugin->version   = 2015051900;        // The current plugin version (Date: YYYYMMDDXX)
 $plugin->requires  = 2014051207;        // Requires this Moodle version
 $plugin->component = 'block_my_books';  // Full name of the plugin (used for diagnostics)
 $plugin->release   = 'v2.0.5';          // Human-readable version name
