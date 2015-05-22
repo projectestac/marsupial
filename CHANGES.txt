@@ -1,8 +1,17 @@
+version 2.6.0.6 (2015-05-22)
+---------------------------------------------------------------------------------------
+
+- Old documents in docs/moodle moved to 'historical_files' branch
+- Repair wrong class name on mybooks install
+- Code and settings cleaning, reenable reports, new version with 'enable.marsupial' setting
+- Allow tracking of activities in Moodle frontpage to users without role
+- Required 'locallib.php' in import.php
+
 Version 2.6.0.5 (2015-01-28)
 ---------------------------------------------------------------------------------------
 
 - Now XML responses admits any tags with multiple children
-- Checked ISB and IdCentro were being sent
+- Checked ISBN and IdCentro were being sent
 - Add bulk credentials manage in the user screen
 - Sort users when managing credentials
 - Files moved to historical_files branch
