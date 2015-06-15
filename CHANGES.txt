@@ -1,3 +1,11 @@
+version 2.7.0.0 (2015-06-15)
+---------------------------------------------------------------------------------------
+ - Requirements of Moodle 2.7 or greater
+ - Code and settings cleaning
+ - Settings moved to config_plugins
+ - Rcontent admits report plugins
+ - Rcontent: Some navigation changes
+
 version 2.6.0.6 (2015-05-22)
 ---------------------------------------------------------------------------------------
 
