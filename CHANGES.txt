@@ -1,3 +1,11 @@
+version 3.0.0.1 (2016-09-22)
+---------------------------------------------------------------------------------------
+ - Requires Moodle 3.0 or greater (tested with 3.1)
+ - Solved problems showing reports and opening activities in a popup
+ - Context module retrieved only if course is not SITEID
+ - Deleted cron function
+ - Fixed bug when filtering users from a course with group mode different from "No groups"
+
 version 2.7.0.1 (2015-09-29)
 ---------------------------------------------------------------------------------------
  - Requires Moodle 2.7 or greater
@@ -71,7 +79,7 @@ Version 2.0.6 (2014-06-05)
 ---------------------------------------------------------------------------------------
 
  - Delete parent redirection on Rcontent activities
- 
+
 Version 2.0.5 (2014-05-07)
 ---------------------------------------------------------------------------------------
 
@@ -91,7 +99,7 @@ Version 2.0.4 (2013-12-09)
 
  - Reviewed code to avoid some problems with PostgreSQL (patch reported by UPCnet)
  - Changed some string functions from unibyte to multibyte
- - Cleaned some code and comments 
+ - Cleaned some code and comments
  - Migrated some SQL functions to Moodle's API best choices
  - Changed some deprecated methods (context)
 
@@ -120,4 +128,3 @@ Version 2.0.1 (2013-09-10)
 Version 2.0 (2013-04-22)
 ---------------------------------------------------------------------------------------
 - First version of the Marsupial module compatible with Moodle 2. It has been tested with Moodle 2.3 and 2.4
-
