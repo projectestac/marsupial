@@ -104,3 +104,5 @@ $string['rcontent:updatescore'] = 'Actualitzar la puntuació';
 $string['rcontent:viewreport'] = 'Veure informe';
 $string['rcontent:viewresult'] = 'Veure resultats';
 $string['rcontent:viewscores'] = 'Veure puntuació';
+
+$string['fullscreen'] = 'Visualització de pantalla completa';

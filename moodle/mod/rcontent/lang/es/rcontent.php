@@ -104,3 +104,5 @@ $string['rcontent:updatescore'] = 'Actualizar puntuación';
 $string['rcontent:viewreport'] = 'Ver informe';
 $string['rcontent:viewresult'] = 'Ver resultados';
 $string['rcontent:viewscores'] = 'Ver puntuación';
+
+$string['fullscreen'] = 'Mostrar a pantalla completa';

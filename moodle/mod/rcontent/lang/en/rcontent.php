@@ -104,3 +104,5 @@ $string['rcontent:updatescore'] = 'Update score';
 $string['rcontent:viewreport'] = 'View report';
 $string['rcontent:viewresult'] = 'View response';
 $string['rcontent:viewscores'] = 'View score';
+
+$string['fullscreen'] = 'Full screen view';
