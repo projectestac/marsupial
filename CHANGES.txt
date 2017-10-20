@@ -1,3 +1,11 @@
+version 3.0.0.2 (2017-10-10)
+---------------------------------------------------------------------------------------
+ - Fix the use of global variables without global keyword in the scope.
+ - Fix: COMPILE_ERROR: break in local/rcommon/add_user_credential.php #25
+ - Fix the use of global variables without global keyword in the scope. Fix typo in valid_activity.
+ - Added fullscreen button for scorm actities
+ - Removed log legacy logging and added standard logging
+
 version 3.0.0.1 (2016-09-22)
 ---------------------------------------------------------------------------------------
  - Requires Moodle 3.0 or greater (tested with 3.1)
