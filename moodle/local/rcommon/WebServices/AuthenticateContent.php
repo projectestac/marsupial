@@ -16,7 +16,7 @@ function AuthenticateUserContent($data, $usr_creden = false, $showurl = true){
         if (!isset($data->bookid) || ($book = $DB->get_record('rcommon_books', array('id' => $data->bookid))) == false){
             print_error(get_string('nobookid','local_rcommon'));
             //save error on bd
-        } elseif (($publisher = $DB->get_record('rcommon_publisher', array('id' => $book->publisherid))) == false){
+        } else if (($publisher = $DB->get_record('rcommon_publisher', array('id' => $book->publisherid))) == false){
             print_error(get_string('nopublisher','local_rcommon'));
             //save error on bd
         }
@@ -32,7 +32,7 @@ function AuthenticateUserContent($data, $usr_creden = false, $showurl = true){
                 $SERVER_PORT = $_SERVER['SERVER_PORT'];
                 $SCRIPT_NAME = $_SERVER['REQUEST_URI'];
                 $HTTPS = isset($_SERVER['HTTPS']) ? $_SERVER['HTTPS'] : (isset($HTTP_SERVER_VARS['HTTPS']) ? $HTTP_SERVER_VARS['HTTPS'] : 'off');
-            } elseif (isset($HTTP_SERVER_VARS)) {
+            } else if (isset($HTTP_SERVER_VARS)) {
                 $SERVER_NAME = $HTTP_SERVER_VARS['SERVER_NAME'];
                 $SERVER_PORT = $HTTP_SERVER_VARS['SERVER_PORT'];
                 $SCRIPT_NAME = $HTTP_SERVER_VARS['REQUEST_URI'];
@@ -132,7 +132,7 @@ function AuthenticateUserContent($data, $usr_creden = false, $showurl = true){
 
             log_to_file("wsAutenthication request: ".$client->__getLastRequest());
             log_to_file("wsAutenthication response: ".$client->__getLastResponse());
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             log_to_file("wsAutenthication exception: ".get_string('bad_wsdl_connection', 'local_rcommon'));
             echo '<script type="text/javascript">window.alert("' . get_string('bad_wsdl_connection', 'local_rcommon') . '"); history.go(-1);</script>';
             echo $OUTPUT->notification(get_string('bad_wsdl_connection', 'local_rcommon'));

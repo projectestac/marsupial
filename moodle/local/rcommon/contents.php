@@ -34,7 +34,7 @@ if ($action == 'update') {
         } else {
             echo $OUTPUT->notification(get_string('consumeerror', 'local_rcommon'));
         }
-    } catch(Exception $fault) {
+    } catch(Throwable $fault) {
         echo $OUTPUT->notification($fault->getMessage());
     }
 } else if ($action == 'delete') {
@@ -120,7 +120,7 @@ if (!empty($books)) {
         }
         $row = array();
         if ($book->format == 'webcontent') {
-            $name = '<img src="'.$OUTPUT->pix_url('icon', 'rcontent').'" class="icon" title="'.$formats[$book->format].'" alt="'.$formats[$book->format].'" />'.$book->name;
+            $name = '<img src="'.$OUTPUT->image_url('icon', 'rcontent').'" class="icon" title="'.$formats[$book->format].'" alt="'.$formats[$book->format].'" />'.$book->name;
         } else {
             $name = $book->name;
         }
