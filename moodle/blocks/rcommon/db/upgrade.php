@@ -9,7 +9,7 @@ function xmldb_block_rcommon_upgrade($oldversion) {
     		//Local not installed
     		try{
 	    		$version = $DB->get_field('block', 'version',array('name'=>'rcommon'));
-	    	} catch (Exception $e){
+	    	} catch (Throwable $e){
 	    		$version = false;
 	    	}
 
