@@ -1,0 +1,40 @@
+version: 1.0.1
+parameters:
+resources:
+  environments:
+    - id: int
+      environment: int
+      position: 1
+      deploymentType: SEMIAUTOMATIC
+  infrastructures:
+    - id: aws
+      element: sftp
+      environments:
+        - environment: int
+      provider: cpd1
+  artifacts:
+    - id: marsupialzip
+      artifactType: static
+      path: marsupial.zip
+build:
+  steps:
+    - id: bs001
+      position: 1
+      tool: command
+      parameters: zip -r marsupial.zip *
+      generates:
+      - marsupialzip
+analysis:
+  evalStaticCode: true
+  checkQualityGates: false
+deploy:
+    steps:
+    - id: dp001
+      position: 1
+      type: predefined
+      destination: aws
+      artifact: artifact01
+notificationRecipients:
+    - iban.cardona@ticxcat.cat
+    - toni.ginard@ticxcat.cat 
+    - monica.grau@ticxcat.cat 
