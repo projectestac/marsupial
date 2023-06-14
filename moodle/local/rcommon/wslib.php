@@ -197,7 +197,7 @@ function rcommon_ws_error($function, $message, $module = 'rcommon', $cmid = 0, $
         $record->userid    =  isset($USER->id) ? $USER->id : 0;
         $record->ip        =  $_SERVER['REMOTE_ADDR'];
         $record->module    =  $module;
-        $course            =  $course ? $course : isset($COURSE->id) ? $COURSE->id : 0;
+        $course            =  $course ? $course : (isset($COURSE->id) ? $COURSE->id : 0);
         $record->course    =  $course != SITEID ? $course : 0;
         $record->cmid      =  $cmid ? $cmid : 0;
         $record->action    =  $function.'_error';
