@@ -1,5 +1,5 @@
 {
-  "plugintypes": {
-    "rcontent": "mod/rcontent/report"
-  }
+    "plugintypes": {
+        "rcontent": "mod\/rcontent\/report"
+    }
 }
