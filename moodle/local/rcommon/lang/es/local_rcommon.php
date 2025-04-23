@@ -1,5 +1,5 @@
 <?php
-$string['pluginname'] ='Recursos remotos';
+$string['pluginname'] = 'Recursos remotos';
 
 $string['rcommon:authenticate'] = 'Autenticar contenido Marsupial';
 $string['rcommon:exportcredentials'] = 'Exportar credenciales de Marsupial';
@@ -83,19 +83,20 @@ $string['scorm'] = 'SCORM remoto';
 $string['webcontent'] = 'Contenido remoto';
 $string['downloadbookstructures_warning'] = '<strong>ATENCIÓN</strong>: Se est&aacute; descargando la estructura de los libros. Este proceso puede llevar algunos minutos. Por favor, espere...';
 
-$string['user_credentials'] 		= 'Usuarios/as con credenciales';
-$string['users_proportion'] 		= '{$a->with_credentials} de los {$a->total_users} usuarios del sistema disponen de alguna credencial';
-$string['publishers'] 			= 'Proveedores';
-$string['no_publishers'] 		= 'No existen proveedores disponibles';
-$string['without_credentials'] 		= 'Usuarios sin credenciales';
-$string['with_credentials'] 		= 'Usuarios con credenciales';
-$string['good_connection'] 		= 'Conexión correcta';
-$string['bad_connection'] 		= 'Se ha producido un problema con la conexión';
-$string['bad_wsdl_connection']          = 'Comprueba dirección del servicio web de autenticación';
-$string['books'] 			= 'libros';
-$string['check_publishers'] 		= 'Comprobar la conexión';
-$string['wait_please'] 			= 'Esta operación puede tardar unos minutos';
-$string['marsupial_bookswarning']       = '<strong>AVISO</strong>: Si después de actualizar la lista de libros detecta que falta alguno, contacte con su proveedor de contenidos.';
+$string['showallusers'] = 'Mostrar todos los usuarios';
+$string['user_credentials'] = 'Usuarios/as con credenciales';
+$string['users_proportion'] = '{$a->with_credentials} de los {$a->total_users} usuarios del sistema disponen de alguna credencial';
+$string['publishers'] = 'Proveedores';
+$string['no_publishers'] = 'No existen proveedores disponibles';
+$string['without_credentials'] = 'Usuarios sin credenciales';
+$string['with_credentials'] = 'Usuarios con credenciales';
+$string['good_connection'] = 'Conexión correcta';
+$string['bad_connection'] = 'Se ha producido un problema con la conexión';
+$string['bad_wsdl_connection'] = 'Comprueba dirección del servicio web de autenticación';
+$string['books'] = 'libros';
+$string['check_publishers'] = 'Comprobar la conexión';
+$string['wait_please'] = 'Esta operación puede tardar unos minutos';
+$string['marsupial_bookswarning'] = '<strong>AVISO</strong>: Si después de actualizar la lista de libros detecta que falta alguno, contacte con su proveedor de contenidos.';
 
 $string['provider_books'] = 'Libros del proveedor {$a}';
 $string['manage_credentials'] = 'Gestión de credenciales';
@@ -205,4 +206,4 @@ Els possibles missatges d'error que es poden produir són:</p>
     <li>Fitxer buit</li>
 </ul>
 <p>Cal tenir en compte que si hi ha errors, caldr&agrave; revisar-los i reparar-los per poder continuar amb el procés d'importació.</p>";
-$string['addeddate']        = 'Añadido';
+$string['addeddate'] = 'Añadido';
