@@ -158,13 +158,20 @@ switch ($action) {
             }
             echo html_writer::table($table);
 
-            echo '<a onclick="M.local_rcommon.check_publishers();">' . get_string('check_publishers', 'local_rcommon') . '</a> <span style="font-size:small">(' . get_string('wait_please', 'local_rcommon') . ')</span> <img id="loading_small" style="visibility:hidden" src="' . $OUTPUT->image_url('i/loading_small') . '" alt="" />';
-            $jsmodule = array(
+            $icon = new pix_icon('i/loading_small', '');
+            $check = get_string('check_publishers', 'local_rcommon');
+            $wait = get_string('wait_please', 'local_rcommon');
+
+            echo '<a onclick="M.local_rcommon.check_publishers();" style="cursor:pointer">' . $check . '</a>
+                  <span style="font-size:small">(' . $wait . ')</span>
+                  <span id="loading_small" style="visibility:hidden;">' . $OUTPUT->render($icon) . '</span>';
+
+            $jsmodule = [
                 'name' => 'local_rcommon',
                 'fullpath' => '/local/rcommon/javascript.js',
-                'requires' => array('base', 'io', 'panel'),
-            );
-            $PAGE->requires->js_init_call('M.local_rcommon.init', array(), true, $jsmodule);
+                'requires' => ['base', 'io', 'panel'],
+            ];
+            $PAGE->requires->js_init_call('M.local_rcommon.init', [], true, $jsmodule);
         }
 }
 
