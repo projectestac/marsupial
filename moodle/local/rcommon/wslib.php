@@ -13,6 +13,7 @@ function get_marsupial_ws_client($publisher, $auth_content = false) {
     if ($debugging) {
         ini_set('soap.wsdl_cache', WSDL_CACHE_NONE);
     }
+    ini_set('soap.wsdl_cache_dir', sys_get_temp_dir()); // Cache directory
 
     $wsdl = $auth_content ? $publisher->urlwsauthentication : $publisher->urlwsbookstructure;
 
@@ -59,7 +60,7 @@ function get_marsupial_center($show_error = true) {
     }
 
     if ($show_error) {
-        throw new \moodle_exception("centernotfound", "local_rcommon");
+        throw new \moodle_exception(get_string("centernotfound", "local_rcommon"));
     }
 
     return false;

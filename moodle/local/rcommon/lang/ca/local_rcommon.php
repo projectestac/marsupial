@@ -1,4 +1,5 @@
 <?php
+
 $string['pluginname'] = 'Recursos remots';
 
 $string['rcommon:authenticate'] = 'Autentica contingut Marsupial';
@@ -34,6 +35,7 @@ $string['error_code_-7'] = 'Rol incorrecte';
 $string['error_code_-101'] = 'Autenticació incorrecta. L\'usuari/ària que sol&middot;licitat accés a aquest m&egrave;tode del servei web no és correcte.';
 $string['error_code_-102'] = 'Autenticació incorrecta. L\'usuari/àira que sol&middot;licita accés a aquest m&egrave;tode del servei web no té permisos suficients.';
 $string['empty_response_error'] = 'Resposta buida o mal formada.';
+$string['wserror'] = 'Codi: {$a->code} - {$a->description}.';
 
 $string['insertkeymsg'] = 'Introduiu una credencial per a aquest recurs';
 $string['key'] = 'Credencial';
@@ -172,6 +174,7 @@ $string['maxselected_js_error_part1'] = 'No es pot desar aquesta assignació, el
 $string['maxselected_js_error_part2'] = 'i has seleccionat';
 $string['maxselected_js_error_part3'] = 'usuaris';
 $string['keymanager_assing_nouser'] = 'No s\'ha seleccionat cap usuari/ària';
+
 $string['checkcredentialko_messageempty'] = 'La credencial no pot estar buida';
 $string['rcommon_data_store_log'] = 'Directori per desar el seguiment';
 $string['rcommon_data_store_log_desc'] = 'Indiqueu el directori per desar el seguiment';
@@ -183,6 +186,7 @@ $string['unit'] = 'Unitat';
 $string['activity'] = 'Activitat';
 
 $string['importcsv'] = 'Importa des d\'un fitxer CSV';
+$string['csvline'] = 'Línia';
 $string['importcsv_help'] = "<p>El fitxer d'importació ha de ser un CSV codificat amb UTF-8 i amb els camps seg&uuml;ents separats per punts i comes (;):</p>
 <pre>isbn;credential;username;userid;pack;packid</pre>
 <ul>

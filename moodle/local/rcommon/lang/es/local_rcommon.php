@@ -1,4 +1,5 @@
 <?php
+
 $string['pluginname'] = 'Recursos remotos';
 
 $string['rcommon:authenticate'] = 'Autenticar contenido Marsupial';
@@ -34,6 +35,7 @@ $string['error_code_-7'] = 'Rol incorrecto';
 $string['error_code_-101'] = 'Autenticación incorrecta. El usuario que solicita acceso a este método del servicio Web no es correcto.';
 $string['error_code_-102'] = 'Autenticación incorrecta. El usuario que solicita acceso a este método del servicio Web no tiene permisos suficientes.';
 $string['empty_response_error'] = 'Respuesta vacía o mal formada.';
+$string['wserror'] = 'Código: {$a->code} - {$a->description}.';
 
 $string['insertkeymsg'] = 'Introduce una clave para este recurso';
 $string['key'] = 'Clave';
